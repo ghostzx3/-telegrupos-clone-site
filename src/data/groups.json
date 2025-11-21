@@ -1,0 +1,222 @@
+{
+  "categories": [
+    { "id": "enviar-grupo", "name": "Enviar grupo", "color": "#d97706" },
+    { "id": "minha-conta", "name": "Minha Conta", "color": "#1796a6" },
+    { "id": "impulsionar", "name": "Impulsionar Grupo", "color": "#d97706" },
+    { "id": "amizade", "name": "Amizade", "color": "#1796a6" },
+    { "id": "namoro", "name": "Namoro", "color": "#1796a6" },
+    { "id": "filmes-series", "name": "Filmes e Séries", "color": "#1796a6" },
+    { "id": "cidades", "name": "Cidades", "color": "#1796a6" },
+    { "id": "cursos", "name": "Cursos", "color": "#1796a6" },
+    { "id": "compra-venda", "name": "Compra e Venda", "color": "#1796a6" },
+    { "id": "ofertas-cupons", "name": "Ofertas e Cupons", "color": "#1796a6" },
+    { "id": "ganhar-dinheiro", "name": "Ganhar Dinheiro", "color": "#1796a6" },
+    { "id": "criptomoedas", "name": "Criptomoedas", "color": "#1796a6" },
+    { "id": "culinaria", "name": "Culinária e Receitas", "color": "#1796a6" },
+    { "id": "concursos", "name": "Concursos", "color": "#1796a6" },
+    { "id": "desenhos-animes", "name": "Desenhos e Animes", "color": "#1796a6" },
+    { "id": "divulgacao", "name": "Divulgação", "color": "#1796a6" },
+    { "id": "empreendedorismo", "name": "Empreendedorismo", "color": "#1796a6" },
+    { "id": "educacao", "name": "Educação", "color": "#1796a6" },
+    { "id": "esportes", "name": "Esportes", "color": "#1796a6" },
+    { "id": "futebol", "name": "Futebol", "color": "#1796a6" },
+    { "id": "sorteios", "name": "Sorteios e Premiações", "color": "#1796a6" },
+    { "id": "adulto", "name": "Adulto", "color": "#334155" },
+    { "id": "categorias", "name": "Categorias", "color": "#334155" },
+    { "id": "apostas", "name": "Apostas", "color": "#78716c" }
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "ROBÔ MINES PREMIUM",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/3963962454.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 2,
+      "title": "RENDA EXTRA",
+      "category": "ganhar-dinheiro",
+      "image": "https://ext.same-assets.com/1088239773/4291789845.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 3,
+      "title": "ROBÔ FORTUNE TIGER",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/3944378267.png",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 4,
+      "title": "GRUPO FORTUNE DRAGON",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/165919757.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 5,
+      "title": "DK GRUPO VIP",
+      "category": "ganhar-dinheiro",
+      "image": "https://ext.same-assets.com/1088239773/4239883280.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 6,
+      "title": "ROBÔ TOURO SORTUDO",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/1340004370.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 7,
+      "title": "ROBÔ DOUBLE SEM GALE",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/1578627362.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 8,
+      "title": "ROBÔ AVIATOR PREMIUM",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/399842527.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 9,
+      "title": "DOUBLE SEM GALE - BLAZE",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/2723800639.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 10,
+      "title": "ROBÔ SORTUDO",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/2111788636.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 11,
+      "title": "[VIP] FORTUNE TIGER [VIP]",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/782292451.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 12,
+      "title": "ROBÔ FORTUNE OX",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/3460921717.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 13,
+      "title": "Itaflix - canais e streamings",
+      "category": "filmes-series",
+      "image": "https://ext.same-assets.com/1088239773/153831275.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 14,
+      "title": "IPTV TUDO LIBERDADO 25,00",
+      "category": "filmes-series",
+      "image": "https://ext.same-assets.com/1088239773/3007220763.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 15,
+      "title": "AVIATOR VELAS ALTAS 10X",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/2133371266.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 16,
+      "title": "IAchados - Cupons, Promoções",
+      "category": "ofertas-cupons",
+      "image": "https://ext.same-assets.com/1088239773/1062351057.png",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 17,
+      "title": "Guest post (backlinks)",
+      "category": "divulgacao",
+      "image": "https://ext.same-assets.com/1088239773/918243067.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 18,
+      "title": "AVIATOR VELAS ALTAS",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/4200414649.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 19,
+      "title": "[CANAL] PromosNet",
+      "category": "ofertas-cupons",
+      "image": "https://ext.same-assets.com/1088239773/1143309239.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 20,
+      "title": "[VIP] BAC BO [VIP]",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/2559648319.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 21,
+      "title": "RENDA EXTRA",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/522122845.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 22,
+      "title": "MINES SINAIS ROBÔ",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/3698783191.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 23,
+      "title": "HORÁRIOS ESTRATÉGICOS",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/3018999563.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    },
+    {
+      "id": 24,
+      "title": "ROBÔ FORTUNE SNAKE",
+      "category": "apostas",
+      "image": "https://ext.same-assets.com/1088239773/238878533.jpeg",
+      "isPremium": true,
+      "link": "https://t.me/example"
+    }
+  ]
+}
