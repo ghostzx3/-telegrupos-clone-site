@@ -21,7 +21,7 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick }: HeaderPro
   };
 
   return (
-    <header className="bg-[#1796a6] shadow-md sticky top-0 z-50">
+    <header className="bg-[#038ede] shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between gap-4">
           {/* Logo */}

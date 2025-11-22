@@ -164,7 +164,7 @@ export function PixPaymentModal({ isOpen, onClose, paymentData }: PixPaymentModa
                 </p>
                 <Button
                   onClick={handleCopy}
-                  className="w-full bg-[#1796a6] hover:bg-[#15869a] text-white"
+                  className="w-full bg-[#038ede] hover:bg-[#0277c7] text-white"
                   disabled={expired}
                 >
                   {copied ? (
@@ -199,7 +199,7 @@ export function PixPaymentModal({ isOpen, onClose, paymentData }: PixPaymentModa
             {/* Status */}
             <div className="text-center">
               <div className="inline-flex items-center gap-2 text-sm text-gray-600">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#1796a6]"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#038ede]"></div>
                 <span>Aguardando pagamento...</span>
               </div>
             </div>
@@ -221,7 +221,7 @@ export function PixPaymentModal({ isOpen, onClose, paymentData }: PixPaymentModa
                 onClose();
                 window.location.reload();
               }}
-              className="bg-[#1796a6] hover:bg-[#15869a] text-white"
+              className="bg-[#038ede] hover:bg-[#0277c7] text-white"
             >
               Fechar
             </Button>

@@ -14,7 +14,7 @@ export async function GET(request: Request) {
   let query = supabase
     .from('groups')
     .select('*, categories(*)', { count: 'exact' })
-    .eq('status', 'approved')
+    .not('approved_at', 'is', null)
 
   // Filter by category
   if (category) {

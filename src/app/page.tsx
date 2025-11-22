@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { GroupCard } from "@/components/GroupCard";
@@ -139,7 +140,7 @@ export default function Home() {
                       category={group.categories?.slug || ''}
                       image={group.image_url || ''}
                       isPremium={group.is_premium}
-                      link={group.telegram_link}
+                      link={group.slug ? `/grupo/${group.slug}` : (group.telegram_link || '#')}
                     />
                   ))}
                 </div>
@@ -161,7 +162,7 @@ export default function Home() {
                 <Button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="bg-[#1796a6] hover:bg-[#15869a] text-white disabled:opacity-50"
+                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50"
                 >
                   Anterior
                 </Button>
@@ -173,7 +174,7 @@ export default function Home() {
                       onClick={() => setCurrentPage(page)}
                       className={`${
                         currentPage === page
-                          ? "bg-[#1796a6] text-white"
+                          ? "bg-[#038ede] text-white"
                           : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                       }`}
                     >
@@ -185,7 +186,7 @@ export default function Home() {
                 <Button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="bg-[#1796a6] hover:bg-[#15869a] text-white disabled:opacity-50"
+                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50"
                 >
                   Próximo
                 </Button>
@@ -209,12 +210,16 @@ export default function Home() {
                 grupos listados. Todas as interações ocorrem diretamente nos canais e grupos do
                 Telegram, fora do nosso site.
               </p>
-              <div className="mt-6 flex justify-center gap-4 text-sm text-[#1796a6]">
+              <div className="mt-6 flex justify-center gap-4 text-sm text-[#038ede]">
                 <a href="#" className="hover:underline">Política de Privacidade</a>
                 <span className="text-gray-500">|</span>
                 <a href="#" className="hover:underline">Termos de Uso</a>
                 <span className="text-gray-500">|</span>
                 <a href="#" className="hover:underline">DMCA</a>
+                <span className="text-gray-500">|</span>
+                <a href="#" className="hover:underline">Remoção de Links</a>
+                <span className="text-gray-500">|</span>
+                <Link href="/blog" className="hover:underline">Blog</Link>
                 <span className="text-gray-500">|</span>
                 <a href="#" className="hover:underline">Contato</a>
               </div>

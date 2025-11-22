@@ -1,211 +1,86 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
-
-export interface Database {
-  public: {
-    Tables: {
-      profiles: {
-        Row: {
-          id: string
-          email: string
-          full_name: string | null
-          avatar_url: string | null
-          is_admin: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id: string
-          email: string
-          full_name?: string | null
-          avatar_url?: string | null
-          is_admin?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          email?: string
-          full_name?: string | null
-          avatar_url?: string | null
-          is_admin?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-      }
-      categories: {
-        Row: {
-          id: string
-          name: string
-          slug: string
-          color: string
-          icon: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          slug: string
-          color?: string
-          icon?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          slug?: string
-          color?: string
-          icon?: string | null
-          created_at?: string
-        }
-      }
-      groups: {
-        Row: {
-          id: string
-          title: string
-          description: string | null
-          category_id: string | null
-          image_url: string | null
-          telegram_link: string
-          member_count: number
-          view_count: number
-          is_premium: boolean
-          is_featured: boolean
-          status: 'pending' | 'approved' | 'rejected'
-          submitted_by: string | null
-          approved_by: string | null
-          approved_at: string | null
-          premium_expires_at: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          title: string
-          description?: string | null
-          category_id?: string | null
-          image_url?: string | null
-          telegram_link: string
-          member_count?: number
-          view_count?: number
-          is_premium?: boolean
-          is_featured?: boolean
-          status?: 'pending' | 'approved' | 'rejected'
-          submitted_by?: string | null
-          approved_by?: string | null
-          approved_at?: string | null
-          premium_expires_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          title?: string
-          description?: string | null
-          category_id?: string | null
-          image_url?: string | null
-          telegram_link?: string
-          member_count?: number
-          view_count?: number
-          is_premium?: boolean
-          is_featured?: boolean
-          status?: 'pending' | 'approved' | 'rejected'
-          submitted_by?: string | null
-          approved_by?: string | null
-          approved_at?: string | null
-          premium_expires_at?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-      }
-      payments: {
-        Row: {
-          id: string
-          user_id: string | null
-          group_id: string | null
-          payment_provider: string
-          external_id: string | null
-          pix_code: string | null
-          pix_qrcode: string | null
-          amount: number
-          currency: string
-          status: 'pending' | 'paid' | 'expired' | 'cancelled' | 'refunded'
-          plan_type: 'premium' | 'featured' | 'boost'
-          duration_days: number
-          expires_at: string | null
-          paid_at: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id?: string | null
-          group_id?: string | null
-          payment_provider?: string
-          external_id?: string | null
-          pix_code?: string | null
-          pix_qrcode?: string | null
-          amount: number
-          currency?: string
-          status?: 'pending' | 'paid' | 'expired' | 'cancelled' | 'refunded'
-          plan_type: 'premium' | 'featured' | 'boost'
-          duration_days: number
-          expires_at?: string | null
-          paid_at?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string | null
-          group_id?: string | null
-          payment_provider?: string
-          external_id?: string | null
-          pix_code?: string | null
-          pix_qrcode?: string | null
-          amount?: number
-          currency?: string
-          status?: 'pending' | 'paid' | 'expired' | 'cancelled' | 'refunded'
-          plan_type?: 'premium' | 'featured' | 'boost'
-          duration_days?: number
-          expires_at?: string | null
-          paid_at?: string | null
-          created_at?: string
-        }
-      }
-      favorites: {
-        Row: {
-          id: string
-          user_id: string
-          group_id: string
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          group_id: string
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          group_id?: string
-          created_at?: string
-        }
-      }
-    }
-  }
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  color: string;
+  created_at: string;
 }
 
-export type Profile = Database['public']['Tables']['profiles']['Row']
-export type Category = Database['public']['Tables']['categories']['Row']
-export type Group = Database['public']['Tables']['groups']['Row']
-export type Payment = Database['public']['Tables']['payments']['Row']
-export type Favorite = Database['public']['Tables']['favorites']['Row']
+export interface Group {
+  id: string;
+  title: string;
+  slug: string;
+  telegram_link: string;
+  category_id: string;
+  description?: string;
+  description_full?: string;
+  rules?: string;
+  image_url?: string;
+  is_premium: boolean;
+  is_featured: boolean;
+  view_count: number;
+  click_count: number;
+  meta_title?: string;
+  meta_description?: string;
+  submitted_by: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+}
 
-export type GroupWithCategory = Group & {
-  categories: Category | null
+export interface GroupWithCategory extends Group {
+  categories: Category | null;
+  tags?: Tag[];
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+  slug: string;
+  created_at: string;
+}
+
+export interface GroupTag {
+  id: string;
+  group_id: string;
+  tag_id: string;
+  created_at: string;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  content: string;
+  image_url?: string;
+  meta_title?: string;
+  meta_description?: string;
+  author_id?: string;
+  view_count: number;
+  is_published: boolean;
+  published_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BlogPostWithTags extends BlogPost {
+  tags?: Tag[];
+  author?: {
+    full_name: string;
+  };
+}
+
+export interface PostTag {
+  id: string;
+  post_id: string;
+  tag_id: string;
+  created_at: string;
+}
+
+export interface Profile {
+  id: string;
+  full_name?: string;
+  is_admin: boolean;
+  created_at: string;
 }

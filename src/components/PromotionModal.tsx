@@ -20,13 +20,13 @@ export function PromotionModal({ isOpen, onClose }: PromotionModalProps) {
       <DialogContent className="sm:max-w-lg">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-full bg-[#1796a6] p-1.5 text-white hover:bg-[#15869a] transition-colors"
+          className="absolute right-4 top-4 rounded-full bg-[#038ede] p-1.5 text-white hover:bg-[#0277c7] transition-colors"
         >
           <X className="h-4 w-4" />
         </button>
 
         <DialogHeader className="space-y-4">
-          <div className="w-full h-48 bg-gradient-to-r from-[#1796a6] to-[#15869a] rounded-lg flex items-center justify-center">
+          <div className="w-full h-48 bg-gradient-to-r from-[#038ede] to-[#0277c7] rounded-lg flex items-center justify-center">
             <img
               src="https://ext.same-assets.com/1088239773/3963962454.jpeg"
               alt="Promoção"

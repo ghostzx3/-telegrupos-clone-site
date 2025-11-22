@@ -33,14 +33,14 @@ export function CategorySidebar({
           {/* Action Buttons */}
           <Button
             onClick={onSubmitGroupClick}
-            className="w-full justify-start bg-[#1796a6] hover:bg-[#15869a] text-white"
+            className="w-full justify-start bg-[#038ede] hover:bg-[#0277c7] text-white"
           >
             Enviar grupo
           </Button>
 
           <Button
             onClick={onLoginClick}
-            className="w-full justify-start bg-[#1796a6] hover:bg-[#15869a] text-white"
+            className="w-full justify-start bg-[#038ede] hover:bg-[#0277c7] text-white"
           >
             Minha Conta
           </Button>
@@ -59,7 +59,7 @@ export function CategorySidebar({
               onClick={() => onCategorySelect(category.id === selectedCategory ? null : category.id)}
               className="w-full justify-start text-white"
               style={{
-                backgroundColor: selectedCategory === category.id ? '#15869a' : category.color,
+                backgroundColor: selectedCategory === category.id ? '#0277c7' : category.color,
               }}
             >
               {category.name}

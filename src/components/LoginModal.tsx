@@ -131,7 +131,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
           <Button
             type="submit"
-            className="w-full bg-[#1796a6] hover:bg-[#15869a] text-white"
+            className="w-full bg-[#038ede] hover:bg-[#0277c7] text-white"
             disabled={loading}
           >
             {loading ? "Processando..." : isLogin ? "Entrar" : "Cadastrar"}
@@ -141,7 +141,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-[#1796a6] hover:underline"
+              className="text-sm text-[#038ede] hover:underline"
             >
               {isLogin
                 ? "Não tem conta? Cadastre-se"

@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+import Link from "next/link";
 
 interface GroupCardProps {
   title: string;
@@ -42,13 +43,14 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
         <div className="relative">
           {/* Image */}
           <div className="relative w-full h-48 bg-gray-200">
-            <Image
-              src={image}
-              alt={title}
-              fill
-              className="object-cover"
-              unoptimized
-            />
+            {image && (
+              <Image
+                src={image}
+                alt={title}
+                fill
+                className="object-cover"
+              />
+            )}
             {/* Premium Badge */}
             {isPremium && (
               <Badge className="absolute top-2 left-2 bg-green-600 hover:bg-green-700 text-white">
@@ -65,12 +67,11 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
             <p className="text-xs text-gray-600 mb-3">{getCategoryDisplay(category)}</p>
 
             {/* Enter Button */}
-            <Button
-              onClick={() => window.open(link, '_blank')}
-              className="w-full bg-[#1796a6] hover:bg-[#15869a] text-white"
-            >
-              ENTRAR
-            </Button>
+            <Link href={link}>
+              <Button className="w-full bg-[#038ede] hover:bg-[#0277c7] text-white">
+                ENTRAR
+              </Button>
+            </Link>
           </div>
         </div>
       </CardContent>

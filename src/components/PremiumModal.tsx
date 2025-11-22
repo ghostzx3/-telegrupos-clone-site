@@ -126,8 +126,8 @@ export function PremiumModal({ isOpen, onClose, groupId }: PremiumModalProps) {
                 key={plan.type}
                 className={`border-2 rounded-lg p-4 cursor-pointer transition-all ${
                   selectedPlan === plan.type
-                    ? 'border-[#1796a6] bg-[#1796a6]/10'
-                    : 'border-gray-200 hover:border-[#1796a6]/50'
+                    ? 'border-[#038ede] bg-[#038ede]/10'
+                    : 'border-gray-200 hover:border-[#038ede]/50'
                 }`}
                 onClick={() => setSelectedPlan(plan.type)}
               >
@@ -155,7 +155,7 @@ export function PremiumModal({ isOpen, onClose, groupId }: PremiumModalProps) {
                       }}
                       className={`w-full p-2 rounded text-sm font-medium transition-all ${
                         selectedPlan === plan.type && selectedDuration === option.duration
-                          ? 'bg-[#1796a6] text-white'
+                          ? 'bg-[#038ede] text-white'
                           : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
                       }`}
                     >
@@ -179,7 +179,7 @@ export function PremiumModal({ isOpen, onClose, groupId }: PremiumModalProps) {
             <Button
               onClick={handlePurchase}
               disabled={!selectedPlan || !selectedDuration || loading}
-              className="flex-1 bg-[#1796a6] hover:bg-[#15869a] text-white"
+              className="flex-1 bg-[#038ede] hover:bg-[#0277c7] text-white"
             >
               {loading ? 'Gerando PIX...' : 'Gerar PIX'}
             </Button>
