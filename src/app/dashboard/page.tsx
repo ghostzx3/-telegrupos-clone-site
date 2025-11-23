@@ -103,34 +103,6 @@ export default function MeusGruposPage() {
           <a href="#" className="text-[#038ede] hover:underline">Compra canais/grupos do Telegram</a>
         </div>
 
-        {/* Seção de Promoção */}
-        <div className="bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 text-white">
-          <h2 className="text-lg sm:text-xl font-bold mb-2">Divulgue Seus Grupos no Telegram com Facilidade</h2>
-          <p className="mb-4 text-sm sm:text-base">
-            O <strong>Bot Telegrupos Oficial</strong> é a forma mais prática de divulgar seus grupos e canais no Telegram. 
-            Com ele, você pode cadastrar seus grupos de forma rápida e eficiente.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
-            <Button
-              onClick={() => window.open('https://t.me/telegrupos_bot', '_blank')}
-              className="bg-white text-blue-600 hover:bg-gray-100 w-full sm:w-auto"
-            >
-              <Rocket className="w-4 h-4 mr-2" />
-              Acessar o Bot no Telegram
-            </Button>
-          </div>
-          <p className="text-xs sm:text-sm mb-2">
-            Quer deixar seu grupo no topo da lista do Bot para receber mais visitas?
-          </p>
-          <Button
-            onClick={() => router.push('/dashboard/planos')}
-            className="bg-green-500 hover:bg-green-600 text-white w-full sm:w-auto"
-          >
-            <Rocket className="w-4 h-4 mr-2" />
-            Quero meu Grupo/Canal Premium
-          </Button>
-        </div>
-
         {/* Lista de Grupos */}
         {loading ? (
           <p className="text-gray-600">Carregando grupos...</p>
