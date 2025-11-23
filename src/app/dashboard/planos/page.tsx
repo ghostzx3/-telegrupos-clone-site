@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
@@ -11,10 +11,17 @@ import { Crown, Rocket, Star } from "lucide-react";
 
 export default function PlanosPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const groupId = searchParams.get('group');
+  const [groupId, setGroupId] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
+
+  // Ler search params apenas no cliente (evita erro de prerender)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      setGroupId(params.get('group'));
+    }
+  }, []);
 
   useEffect(() => {
     checkAuth();
@@ -35,7 +42,8 @@ export default function PlanosPage() {
   function handleSelectPlan(planType: string, duration: number) {
     setSelectedPlan(planType);
     // Redirecionar para página de pagamento
-    router.push(`/dashboard/pagamento?plan=${planType}&group=${groupId || ''}&duration=${duration}`);
+    const currentGroupId = groupId || '';
+    router.push(`/dashboard/pagamento?plan=${planType}&group=${currentGroupId}&duration=${duration}`);
   }
 
   if (!isAuthenticated) {
