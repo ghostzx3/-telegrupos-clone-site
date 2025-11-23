@@ -83,14 +83,22 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
     setLoading(true);
     setError("");
 
-    const supabase = createClient();
-
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(forgotPasswordEmail, {
-        redirectTo: `${window.location.origin}/dashboard/senha`,
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: forgotPasswordEmail,
+        }),
       });
 
-      if (error) throw error;
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao enviar email de recuperação');
+      }
 
       setForgotPasswordSent(true);
     } catch (err: any) {
