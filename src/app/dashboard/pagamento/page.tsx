@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
@@ -31,7 +31,7 @@ const PLAN_DURATIONS: Record<string, Record<number, number>> = {
   boost: { 1: 9.99, 3: 24.99, 7: 19.90 }
 };
 
-export default function PagamentoPage() {
+function PagamentoContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const planType = searchParams.get('plan') || '';
@@ -259,6 +259,22 @@ export default function PagamentoPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <Loader2 className="w-8 h-8 animate-spin text-[#038ede]" />
+    </div>
+  );
+}
+
+export default function PagamentoPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <PagamentoContent />
+    </Suspense>
   );
 }
 
