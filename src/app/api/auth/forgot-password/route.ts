@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { createHash, randomBytes } from 'crypto';
-import { sendPasswordResetEmail } from '@/lib/email';
+import { createClient } from '@supabase/supabase-js';
 
 // Configurações de segurança
-const TOKEN_EXPIRATION_MINUTES = 15;
 const MAX_ATTEMPTS_PER_HOUR = 5;
 const MAX_ATTEMPTS_PER_DAY = 10;
 
@@ -83,13 +81,6 @@ async function recordAttempt(email: string, ipAddress: string) {
   }
 }
 
-// Gerar token seguro
-function generateSecureToken(): { token: string; tokenHash: string } {
-  const token = randomBytes(32).toString('hex');
-  const tokenHash = createHash('sha256').update(token).digest('hex');
-  return { token, tokenHash };
-}
-
 // Obter IP do cliente
 function getClientIP(request: NextRequest): string {
   const forwarded = request.headers.get('x-forwarded-for');
@@ -135,47 +126,46 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Invalidar tokens anteriores do usuário
-    await admin
-      .from('password_reset_tokens')
-      .update({ used_at: new Date().toISOString() })
-      .eq('user_id', user.user.id)
-      .is('used_at', null);
-
-    // Gerar novo token
-    const { token, tokenHash } = generateSecureToken();
-    const expiresAt = new Date(Date.now() + TOKEN_EXPIRATION_MINUTES * 60 * 1000);
-
-    // Salvar token no banco
-    await admin.from('password_reset_tokens').insert({
-      user_id: user.user.id,
-      token: token, // Guardamos o token original para o email
-      token_hash: tokenHash, // Hash para validação
-      expires_at: expiresAt.toISOString(),
-      ip_address: ipAddress,
-      user_agent: request.headers.get('user-agent') || '',
-    });
-
     // Registrar tentativa
     await recordAttempt(email.toLowerCase(), ipAddress);
 
-    // Enviar email
+    // Usar Supabase Auth para enviar email de recuperação
+    // O método resetPasswordForEmail envia o email automaticamente
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const resetUrl = `${appUrl}/reset-password?token=${token}`;
+    const redirectUrl = `${appUrl}/reset-password`;
 
     try {
-      await sendPasswordResetEmail(email.toLowerCase(), resetUrl);
-    } catch (emailError) {
-      console.error('Error sending email:', emailError);
-      // Não falhar a requisição se o email falhar (security best practice)
-      // Mas logar o erro para debug
-    }
+      // Criar cliente Supabase temporário para usar resetPasswordForEmail
+      // Este método envia o email automaticamente usando os templates do Supabase
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+      
+      const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      });
 
-    // Em produção, você deve usar um serviço de email como:
-    // - Resend
-    // - SendGrid
-    // - AWS SES
-    // - Ou configurar templates no Supabase
+      // Usar o método que realmente envia o email
+      // O Supabase vai usar o template configurado em:
+      // Dashboard > Authentication > Email Templates > Reset Password
+      const { error: emailError } = await supabaseClient.auth.resetPasswordForEmail(
+        email.toLowerCase(),
+        {
+          redirectTo: redirectUrl,
+        }
+      );
+
+      if (emailError) {
+        console.error('Error sending reset email:', emailError);
+        // Não falhar a requisição (security best practice)
+      }
+      // O email foi enviado automaticamente pelo Supabase
+    } catch (emailError) {
+      console.error('Error processing reset request:', emailError);
+      // Não falhar a requisição se o email falhar (security best practice)
+    }
 
     return NextResponse.json({
       message: 'Se o email existir, você receberá um link de recuperação.',

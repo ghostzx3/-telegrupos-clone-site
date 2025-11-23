@@ -30,9 +30,9 @@ This guide will help you set up Supabase (database + auth) and Stripe (payments)
 
 2. Fill in your Supabase credentials:
    ```env
-   NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
-   SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
+   NEXT_PUBLIC_SUPABASE_URL=https://snfunbvtiozcxsseogme.supabase.co
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_3puni7q5K1-EL6O0IP2YAg_zZX_I2rD
+   SUPABASE_SERVICE_ROLE_KEY=sb_secret_jdomeqLvUgE7QbIR2onMqQ_98JxKeo4
    ```
 
 ### Step 4: Configure Auth Settings

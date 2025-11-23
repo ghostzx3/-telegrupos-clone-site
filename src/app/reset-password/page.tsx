@@ -1,18 +1,17 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Lock, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/client";
 
 function ResetPasswordContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   
-  const [token, setToken] = useState<string>("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(true);
@@ -21,23 +20,69 @@ function ResetPasswordContent() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [tokenValid, setTokenValid] = useState<boolean | null>(null);
+  const [hasToken, setHasToken] = useState(false);
 
-  // Ler token da URL apenas no cliente
+  // Verificar token do Supabase no hash da URL
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const tokenParam = params.get('token');
-      if (tokenParam) {
-        setToken(tokenParam);
-        verifyToken(tokenParam);
+      const hash = window.location.hash.substring(1);
+      const hashParams = new URLSearchParams(hash);
+      const accessToken = hashParams.get('access_token');
+      const type = hashParams.get('type');
+
+      // Verificar se é um token de recuperação do Supabase
+      if (accessToken && type === 'recovery') {
+        setHasToken(true);
+        verifySupabaseToken(accessToken);
       } else {
-        setTokenValid(false);
-        setError("Token não encontrado na URL.");
-        setLoading(false);
+        // Tentar token customizado na query string (fallback)
+        const params = new URLSearchParams(window.location.search);
+        const tokenParam = params.get('token');
+        if (tokenParam) {
+          setHasToken(true);
+          verifyToken(tokenParam);
+        } else {
+          setTokenValid(false);
+          setError("Token não encontrado na URL.");
+          setLoading(false);
+        }
       }
     }
   }, []);
 
+  // Verificar token do Supabase
+  async function verifySupabaseToken(accessToken: string) {
+    setVerifying(true);
+    setError("");
+
+    try {
+      const supabase = createClient();
+      
+      // Tentar fazer login com o token de recuperação
+      // Isso valida automaticamente o token
+      const { data, error: sessionError } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: '', // Não necessário para validação
+      });
+
+      if (sessionError || !data.session) {
+        setTokenValid(false);
+        setError("Token inválido ou expirado.");
+      } else {
+        setTokenValid(true);
+        // Limpar a hash da URL após validar
+        window.history.replaceState(null, '', window.location.pathname);
+      }
+    } catch (err: any) {
+      setTokenValid(false);
+      setError("Erro ao verificar token. Tente novamente.");
+    } finally {
+      setVerifying(false);
+      setLoading(false);
+    }
+  }
+
+  // Verificar token customizado (fallback)
   async function verifyToken(tokenToVerify: string) {
     setVerifying(true);
     setError("");
@@ -84,24 +129,22 @@ function ResetPasswordContent() {
     setResetting(true);
 
     try {
-      const response = await fetch('/api/auth/reset-password', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          token,
-          newPassword,
-        }),
+      const supabase = createClient();
+      
+      // Usar o método do Supabase para atualizar a senha
+      // O Supabase já validou o token na sessão
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao resetar senha');
+      if (updateError) {
+        throw updateError;
       }
 
       setSuccess("Senha alterada com sucesso! Redirecionando...");
+      
+      // Fazer logout para forçar novo login
+      await supabase.auth.signOut();
       
       // Redirecionar para login após 2 segundos
       setTimeout(() => {
