@@ -164,3 +164,4 @@ Se tiver problemas:
 3. Verifique os logs do console do navegador
 4. Verifique os logs do Supabase
 
+

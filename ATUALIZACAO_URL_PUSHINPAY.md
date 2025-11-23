@@ -47,3 +47,4 @@ Após atualizar, teste gerando um pagamento PIX. O código tentará automaticame
 
 Os logs do servidor mostrarão quais endpoints estão sendo tentados. Verifique o console para ver qual endpoint funciona.
 
+
