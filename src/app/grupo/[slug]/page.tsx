@@ -118,13 +118,13 @@ export default function GroupPage() {
         onSubmitGroupClick={() => setIsSubmitGroupModalOpen(true)}
       />
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-3 sm:p-4 md:p-6">
         <div className="max-w-4xl mx-auto">
           {/* Group Content */}
-          <article className="bg-white rounded-lg shadow-lg overflow-hidden mb-8">
+          <article className="bg-white rounded-lg shadow-lg overflow-hidden mb-6 sm:mb-8">
             {/* Group Image/Icon */}
-            <div className="flex justify-center pt-8 pb-4">
-              <div className="relative w-40 h-40 rounded-full overflow-hidden bg-gradient-to-br from-[#038ede] to-[#0277c7] flex items-center justify-center">
+            <div className="flex justify-center pt-4 sm:pt-6 md:pt-8 pb-3 sm:pb-4">
+              <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden bg-gradient-to-br from-[#038ede] to-[#0277c7] flex items-center justify-center">
                 {group.image_url ? (
                   <Image
                     src={group.image_url}
@@ -142,17 +142,17 @@ export default function GroupPage() {
               </div>
             </div>
 
-            <div className="p-8 pt-4">
+            <div className="p-4 sm:p-6 md:p-8 pt-2 sm:pt-3 md:pt-4">
               {/* Title */}
-              <h1 className="text-3xl font-bold text-gray-900 text-center mb-4">
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 text-center mb-3 sm:mb-4">
                 {group.title}
                 {group.is_premium && (
-                  <Badge className="ml-2 bg-green-600 text-white">Plus</Badge>
+                  <Badge className="ml-2 bg-green-600 text-white text-xs sm:text-sm">Plus</Badge>
                 )}
               </h1>
 
               {/* Meta info */}
-              <div className="flex items-center justify-center gap-4 text-sm text-gray-500 mb-6">
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4" />
                   <span>{formatDate(group.created_at)}</span>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -99,7 +100,14 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[#2c2c2c] p-6">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-6">Painel Administrativo</h1>
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-white">Painel Administrativo</h1>
+          <Link href="/admin/blog">
+            <Button className="bg-[#038ede] hover:bg-[#0277c7] text-white">
+              Gerenciar Blog
+            </Button>
+          </Link>
+        </div>
 
         {/* Filter Tabs */}
         <div className="flex gap-2 mb-6">

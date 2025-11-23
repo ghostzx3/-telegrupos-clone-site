@@ -93,6 +93,8 @@ export default function Home() {
     setSelectedCategory(categoryId);
   };
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header
@@ -101,33 +103,77 @@ export default function Home() {
         onSubmitGroupClick={() => setIsSubmitGroupModalOpen(true)}
       />
 
-      <div className="flex flex-1">
-        <CategorySidebar
-          categories={categories.map(cat => ({
-            id: cat.id,
-            name: cat.name,
-            color: cat.color
-          }))}
-          selectedCategory={selectedCategory}
-          onCategorySelect={handleCategorySelect}
-          onSubmitGroupClick={() => setIsSubmitGroupModalOpen(true)}
-          onLoginClick={() => setIsLoginModalOpen(true)}
-          onBoostClick={() => setIsPromotionModalOpen(true)}
-        />
+      <div className="flex flex-1 relative">
+        {/* CategorySidebar - Hidden on mobile, shown on desktop */}
+        <div className={`
+          fixed lg:static inset-y-0 left-0 z-40 lg:z-auto
+          transform transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}>
+          <CategorySidebar
+            categories={categories.map(cat => ({
+              id: cat.id,
+              name: cat.name,
+              color: cat.color
+            }))}
+            selectedCategory={selectedCategory}
+            onCategorySelect={(id) => {
+              handleCategorySelect(id);
+              setIsSidebarOpen(false);
+            }}
+            onSubmitGroupClick={() => {
+              setIsSubmitGroupModalOpen(true);
+              setIsSidebarOpen(false);
+            }}
+            onLoginClick={() => {
+              setIsLoginModalOpen(true);
+              setIsSidebarOpen(false);
+            }}
+            onBoostClick={() => {
+              setIsPromotionModalOpen(true);
+              setIsSidebarOpen(false);
+            }}
+          />
+        </div>
+        
+        {/* Overlay for mobile */}
+        {isSidebarOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black/50 z-30"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
 
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-3 sm:p-4 md:p-6 w-full lg:w-auto">
           <div className="max-w-7xl mx-auto">
             {/* Title and Sort */}
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">
-                Grupos Telegram
-              </h2>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                {/* Mobile Menu Button - Abrir categorias */}
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setIsSidebarOpen(!isSidebarOpen);
+                  }}
+                  className="lg:hidden p-2 text-white hover:bg-white/10 rounded transition-colors"
+                  aria-label="Abrir categorias"
+                  type="button"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
+                  Grupos Telegram
+                </h2>
+              </div>
 
               {/* Sort Options */}
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-4 py-2 rounded-md bg-white text-gray-900 border-none"
+                className="px-3 sm:px-4 py-2 rounded-md bg-white text-gray-900 border-none text-sm sm:text-base w-full sm:w-auto"
               >
                 <option value="created_at">Mais Recentes</option>
                 <option value="popular">Mais Populares</option>
@@ -143,7 +189,7 @@ export default function Home() {
             ) : (
               <>
                 {/* Groups Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
                   {groups.map((group) => (
                     <GroupCard
                       key={group.id}
@@ -169,21 +215,21 @@ export default function Home() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center gap-2 mt-8">
+              <div className="flex flex-wrap justify-center gap-2 mt-6 sm:mt-8">
                 <Button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50"
+                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50 text-sm sm:text-base px-3 sm:px-4"
                 >
                   Anterior
                 </Button>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <Button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`${
+                      className={`text-sm sm:text-base min-w-[2.5rem] sm:min-w-[3rem] ${
                         currentPage === page
                           ? "bg-[#038ede] text-white"
                           : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -197,7 +243,7 @@ export default function Home() {
                 <Button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50"
+                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50 text-sm sm:text-base px-3 sm:px-4"
                 >
                   Próximo
                 </Button>
@@ -206,35 +252,35 @@ export default function Home() {
           </div>
 
           {/* Footer */}
-          <footer className="mt-16 py-8 border-t border-gray-600">
-            <div className="max-w-7xl mx-auto text-center">
-              <p className="text-white mb-4">
+          <footer className="mt-8 sm:mt-16 py-6 sm:py-8 border-t border-gray-600">
+            <div className="max-w-7xl mx-auto text-center px-4">
+              <p className="text-white mb-3 sm:mb-4 text-sm sm:text-base">
                 Bem-vindo ao <strong>Telegrupos</strong>! Aqui você encontrará uma seleção dos
                 melhores links para canais, bots e grupos do Telegram. Somos o maior site para a
                 divulgação de canais e grupos, oferecendo um diretório para participação na
                 comunidade Telegram.
               </p>
-              <p className="text-sm text-gray-400">
+              <p className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6">
                 É importante notar que o Telegrupos não tem qualquer vínculo com o Telegram FZ-LLC.
                 As informações disponibilizadas neste site têm caráter meramente informativo e não
                 nos responsabilizamos pelo conteúdo das conversas sensíveis dos pets veiculador dos
                 grupos listados. Todas as interações ocorrem diretamente nos canais e grupos do
                 Telegram, fora do nosso site.
               </p>
-              <div className="mt-6 flex justify-center gap-4 text-sm text-[#038ede]">
+              <div className="mt-4 sm:mt-6 flex flex-wrap justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-[#038ede]">
                 <a href="#" className="hover:underline">Política de Privacidade</a>
-                <span className="text-gray-500">|</span>
+                <span className="text-gray-500 hidden sm:inline">|</span>
                 <a href="#" className="hover:underline">Termos de Uso</a>
-                <span className="text-gray-500">|</span>
+                <span className="text-gray-500 hidden sm:inline">|</span>
                 <a href="#" className="hover:underline">DMCA</a>
-                <span className="text-gray-500">|</span>
+                <span className="text-gray-500 hidden sm:inline">|</span>
                 <a href="#" className="hover:underline">Remoção de Links</a>
-                <span className="text-gray-500">|</span>
+                <span className="text-gray-500 hidden sm:inline">|</span>
                 <Link href="/blog" className="hover:underline">Blog</Link>
-                <span className="text-gray-500">|</span>
+                <span className="text-gray-500 hidden sm:inline">|</span>
                 <a href="#" className="hover:underline">Contato</a>
               </div>
-              <p className="mt-4 text-xs text-gray-500">
+              <p className="mt-3 sm:mt-4 text-xs text-gray-500">
                 © 2025 - Grupos Telegram
               </p>
             </div>

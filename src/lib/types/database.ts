@@ -54,6 +54,8 @@ export interface BlogPost {
   excerpt?: string;
   content: string;
   image_url?: string;
+  video_url?: string;
+  category_id?: string;
   meta_title?: string;
   meta_description?: string;
   author_id?: string;
@@ -66,9 +68,33 @@ export interface BlogPost {
 
 export interface BlogPostWithTags extends BlogPost {
   tags?: Tag[];
+  category?: Category | null;
   author?: {
     full_name: string;
   };
+  media?: BlogMedia[];
+  links?: BlogLink[];
+}
+
+export interface BlogMedia {
+  id: string;
+  post_id: string;
+  media_type: 'image' | 'video';
+  media_url: string;
+  alt_text?: string;
+  caption?: string;
+  display_order: number;
+  created_at: string;
+}
+
+export interface BlogLink {
+  id: string;
+  post_id: string;
+  link_text: string;
+  link_url: string;
+  link_type: 'external' | 'internal' | 'affiliate';
+  display_order: number;
+  created_at: string;
 }
 
 export interface PostTag {

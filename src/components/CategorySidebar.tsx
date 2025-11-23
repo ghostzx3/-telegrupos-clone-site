@@ -27,9 +27,9 @@ export function CategorySidebar({
   onBoostClick,
 }: CategorySidebarProps) {
   return (
-    <aside className="w-64 flex-shrink-0">
-      <ScrollArea className="h-[calc(100vh-80px)]">
-        <div className="space-y-2 p-4">
+    <aside className="w-64 flex-shrink-0 bg-[#2c2c2c] lg:bg-transparent h-screen lg:h-auto">
+      <ScrollArea className="h-[calc(100vh-80px)] lg:h-[calc(100vh-80px)]">
+        <div className="space-y-2 p-3 sm:p-4">
           {/* Action Buttons */}
           <Button
             onClick={onSubmitGroupClick}

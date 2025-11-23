@@ -91,26 +91,29 @@ export default function BlogPage() {
         onSubmitGroupClick={() => setIsSubmitGroupModalOpen(true)}
       />
 
-      <div className="flex flex-1">
-        <CategorySidebar
-          categories={categories.map(cat => ({
-            id: cat.id,
-            name: cat.name,
-            color: cat.color
-          }))}
-          selectedCategory={null}
-          onCategorySelect={() => {}}
-          onSubmitGroupClick={() => setIsSubmitGroupModalOpen(true)}
-          onLoginClick={() => setIsLoginModalOpen(true)}
-          onBoostClick={() => setIsPromotionModalOpen(true)}
-        />
+      <div className="flex flex-1 relative">
+        {/* CategorySidebar - Hidden on mobile */}
+        <div className="hidden lg:block">
+          <CategorySidebar
+            categories={categories.map(cat => ({
+              id: cat.id,
+              name: cat.name,
+              color: cat.color
+            }))}
+            selectedCategory={null}
+            onCategorySelect={() => {}}
+            onSubmitGroupClick={() => setIsSubmitGroupModalOpen(true)}
+            onLoginClick={() => setIsLoginModalOpen(true)}
+            onBoostClick={() => setIsPromotionModalOpen(true)}
+          />
+        </div>
 
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-3 sm:p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
             {/* Title */}
-            <div className="mb-8">
-              <h1 className="text-4xl font-bold text-white mb-2">Blog</h1>
-              <p className="text-gray-300">
+            <div className="mb-4 sm:mb-6 md:mb-8">
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">Blog</h1>
+              <p className="text-sm sm:text-base text-gray-300">
                 Encontre tudo sobre grupos de Telegram no blog do Telegrupos. Dicas, novidades e conteúdos exclusivos para você explorar!
               </p>
             </div>
@@ -157,7 +160,7 @@ export default function BlogPage() {
             ) : (
               <>
                 {/* Posts Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                   {posts.map((post) => (
                     <BlogPostCard key={post.id} post={post} />
                   ))}

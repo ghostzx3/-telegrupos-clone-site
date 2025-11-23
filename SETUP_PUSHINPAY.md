@@ -69,7 +69,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-key-aqui
 SUPABASE_SERVICE_ROLE_KEY=sua-service-key-aqui
 
 # PushInPay
-NEXT_PUBLIC_PUSHINPAY_API_URL=https://api.pushinpay.com.br
+NEXT_PUBLIC_PUSHINPAY_API_URL=https://app.pushinpay.com.br/app
 PUSHINPAY_API_KEY=sua-api-key-aqui
 PUSHINPAY_WEBHOOK_SECRET=seu-webhook-secret-aqui
 
@@ -322,6 +322,7 @@ expiresIn: 3600, // 3600 = 1 hora, 7200 = 2 horas
 ## 📚 Documentação PushInPay
 
 - **Dashboard**: https://app.pushinpay.com.br
+- **API URL**: https://app.pushinpay.com.br/app
 - **API Docs**: https://docs.pushinpay.com.br
 - **Suporte**: suporte@pushinpay.com.br
 
