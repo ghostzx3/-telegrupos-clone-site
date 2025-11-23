@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
@@ -33,20 +33,35 @@ const PLAN_DURATIONS: Record<string, Record<number, number>> = {
 
 function PagamentoContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const planType = searchParams.get('plan') || '';
-  const groupId = searchParams.get('group') || '';
-  const duration = parseInt(searchParams.get('duration') || '30');
-
+  
+  const [planType, setPlanType] = useState('');
+  const [groupId, setGroupId] = useState('');
+  const [duration, setDuration] = useState(30);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null);
   const [error, setError] = useState("");
 
+  // Ler search params apenas no cliente (evita erro de prerender)
   useEffect(() => {
-    checkAuth();
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const plan = params.get('plan') || '';
+      const group = params.get('group') || '';
+      const dur = parseInt(params.get('duration') || '30');
+      
+      setPlanType(plan);
+      setGroupId(group);
+      setDuration(dur);
+    }
   }, []);
+
+  useEffect(() => {
+    if (planType && groupId) {
+      checkAuth();
+    }
+  }, [planType, groupId]);
 
 
   async function checkAuth() {
@@ -61,28 +76,32 @@ function PagamentoContent() {
     setIsAuthenticated(true);
     setLoading(false);
 
-    // Validar parâmetros
-    if (!planType || !groupId) {
+    // Validar parâmetros (usar estados atuais)
+    const currentPlanType = planType;
+    const currentGroupId = groupId;
+    const currentDuration = duration;
+
+    if (!currentPlanType || !currentGroupId) {
       setError("Parâmetros inválidos. Redirecionando...");
       setTimeout(() => router.push('/dashboard/planos'), 2000);
       return;
     }
 
     // Criar pagamento automaticamente
-    createPayment();
+    createPayment(currentGroupId, currentPlanType, currentDuration);
   }
 
-  async function createPayment() {
+  async function createPayment(groupIdParam: string, planTypeParam: string, durationParam: number) {
     setCreating(true);
     setError("");
 
     try {
       // Validar dados antes de enviar
-      if (!groupId || !planType || !duration) {
+      if (!groupIdParam || !planTypeParam || !durationParam) {
         throw new Error('Dados incompletos: groupId, planType e duration são obrigatórios');
       }
 
-      console.log('Criando pagamento:', { groupId, planType, duration });
+      console.log('Criando pagamento:', { groupId: groupIdParam, planType: planTypeParam, duration: durationParam });
 
       const response = await fetch('/api/payments/create-pix', {
         method: 'POST',
@@ -90,9 +109,9 @@ function PagamentoContent() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          groupId,
-          planType,
-          duration
+          groupId: groupIdParam,
+          planType: planTypeParam,
+          duration: durationParam
         })
       });
 
