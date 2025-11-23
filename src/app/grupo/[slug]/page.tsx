@@ -1,17 +1,29 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
-import { LoginModal } from "@/components/LoginModal";
-import { SubmitGroupModal } from "@/components/SubmitGroupModal";
-import { RecommendedGroups } from "@/components/RecommendedGroups";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Eye, AlertTriangle, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import type { GroupWithCategory } from "@/lib/types/database";
+
+// Lazy load modals - só carregam quando necessário
+const LoginModal = dynamic(() => import("@/components/LoginModal").then(mod => ({ default: mod.LoginModal })), {
+  ssr: false,
+});
+
+const SubmitGroupModal = dynamic(() => import("@/components/SubmitGroupModal").then(mod => ({ default: mod.SubmitGroupModal })), {
+  ssr: false,
+});
+
+// Lazy load RecommendedGroups - só carrega quando visível
+const RecommendedGroups = dynamic(() => import("@/components/RecommendedGroups").then(mod => ({ default: mod.RecommendedGroups })), {
+  ssr: false,
+});
 
 export default function GroupPage() {
   const params = useParams();
@@ -119,6 +131,8 @@ export default function GroupPage() {
                     alt={group.title}
                     fill
                     className="object-cover"
+                    priority
+                    sizes="160px"
                   />
                 ) : (
                   <span className="text-white text-5xl font-bold">

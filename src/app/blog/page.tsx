@@ -1,15 +1,26 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { Header } from "@/components/Header";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { BlogPostCard } from "@/components/BlogPostCard";
-import { LoginModal } from "@/components/LoginModal";
-import { SubmitGroupModal } from "@/components/SubmitGroupModal";
-import { PromotionModal } from "@/components/PromotionModal";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Category, BlogPostWithTags, Tag } from "@/lib/types/database";
+
+// Lazy load modals - só carregam quando necessário
+const LoginModal = dynamic(() => import("@/components/LoginModal").then(mod => ({ default: mod.LoginModal })), {
+  ssr: false,
+});
+
+const SubmitGroupModal = dynamic(() => import("@/components/SubmitGroupModal").then(mod => ({ default: mod.SubmitGroupModal })), {
+  ssr: false,
+});
+
+const PromotionModal = dynamic(() => import("@/components/PromotionModal").then(mod => ({ default: mod.PromotionModal })), {
+  ssr: false,
+});
 
 const ITEMS_PER_PAGE = 12;
 

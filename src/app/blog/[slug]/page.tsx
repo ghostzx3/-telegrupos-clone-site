@@ -1,15 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
-import { LoginModal } from "@/components/LoginModal";
-import { SubmitGroupModal } from "@/components/SubmitGroupModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Eye, ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import type { BlogPostWithTags } from "@/lib/types/database";
+
+// Lazy load modals - só carregam quando necessário
+const LoginModal = dynamic(() => import("@/components/LoginModal").then(mod => ({ default: mod.LoginModal })), {
+  ssr: false,
+});
+
+const SubmitGroupModal = dynamic(() => import("@/components/SubmitGroupModal").then(mod => ({ default: mod.SubmitGroupModal })), {
+  ssr: false,
+});
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -103,6 +111,8 @@ export default function BlogPostPage() {
                   alt={post.title}
                   fill
                   className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, 896px"
                 />
               </div>
             )}

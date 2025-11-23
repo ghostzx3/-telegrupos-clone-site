@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
+import Image from "next/image";
 
 interface PromotionModalProps {
   isOpen: boolean;
@@ -26,11 +27,14 @@ export function PromotionModal({ isOpen, onClose }: PromotionModalProps) {
         </button>
 
         <DialogHeader className="space-y-4">
-          <div className="w-full h-48 bg-gradient-to-r from-[#038ede] to-[#0277c7] rounded-lg flex items-center justify-center">
-            <img
+          <div className="relative w-full h-48 bg-gradient-to-r from-[#038ede] to-[#0277c7] rounded-lg overflow-hidden">
+            <Image
               src="https://ext.same-assets.com/1088239773/3963962454.jpeg"
               alt="Promoção"
-              className="w-full h-full object-cover rounded-lg"
+              fill
+              className="object-cover"
+              loading="lazy"
+              sizes="(max-width: 768px) 100vw, 512px"
             />
           </div>
 
