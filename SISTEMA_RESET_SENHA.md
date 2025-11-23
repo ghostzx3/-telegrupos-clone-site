@@ -289,9 +289,11 @@ Adicione ao `.env.local`:
 
 ```env
 # URL da aplicação (para links de email)
-NEXT_PUBLIC_APP_URL=http://localhost:3000
-# ou em produção:
-# NEXT_PUBLIC_APP_URL=https://seudominio.com
+# Desenvolvimento:
+# NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Produção:
+NEXT_PUBLIC_APP_URL=https://www.grupostelegramx.com
 
 # Supabase (já configurado)
 NEXT_PUBLIC_SUPABASE_URL=...

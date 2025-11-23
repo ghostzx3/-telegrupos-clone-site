@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
 
     // Usar Supabase Auth para enviar email de recuperação
     // O método resetPasswordForEmail envia o email automaticamente
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.grupostelegramx.com';
     const redirectUrl = `${appUrl}/reset-password`;
 
     try {
