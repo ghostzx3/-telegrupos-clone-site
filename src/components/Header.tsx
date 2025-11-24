@@ -48,7 +48,7 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
               />
             </div>
             <h1 className="text-white font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl truncate" style={{ fontFamily: "'Small Cake', sans-serif", letterSpacing: '0.02em' }}>
-              Grupostelegramx.com
+              GruposTelegramX
             </h1>
           </div>
 
