@@ -35,22 +35,20 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo */}
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0 min-w-0">
-            {/* Ícone do Telegram */}
-            <div className="relative flex-shrink-0" style={{ width: '24px', height: '24px' }}>
+            {/* Ícone do Telegram - Logo oficial preciso */}
+            <div className="relative flex-shrink-0 aspect-square w-6 h-6 sm:w-7 sm:h-7">
               <svg 
-                width="24" 
-                height="24" 
-                viewBox="0 0 240 240" 
+                viewBox="0 0 200 200" 
                 fill="none" 
                 xmlns="http://www.w3.org/2000/svg"
+                className="w-full h-full"
                 preserveAspectRatio="xMidYMid meet"
-                style={{ width: '100%', height: '100%' }}
               >
-                {/* Círculo azul de fundo */}
-                <circle cx="120" cy="120" r="120" fill="#0088cc"/>
-                {/* Avião de papel do Telegram */}
-                <path d="M81.229 128.772l14.237 39.406s1.78 3.687 3.686 3.687c1.904 0 2.975-1.923 2.975-1.923l20.177-52.11 34.67-32.316s3.687-2.975 0-5.95l-44.91-35.926s-2.975-2.975-5.95 0l-68.48 66.582s-2.975 1.904-1.904 5.95l1.904 5.95z" fill="white"/>
-                <path d="M100.106 138.878l-2.975 18.177s-1.904 5.95 5.95 5.95c5.95 0 12.898-5.95 12.898-5.95l35.926-25.177 52.11-48.135s5.95-4.862 2.975-8.807c-2.975-3.686-5.95-2.975-5.95-2.975L97.131 118.237s-4.862 1.904-5.95 7.854l8.925 12.787z" fill="#c8daea"/>
+                {/* Círculo azul de fundo - cor oficial do Telegram */}
+                <circle cx="100" cy="100" r="100" fill="#229ED9"/>
+                {/* Avião de papel do Telegram - path oficial */}
+                <path d="M50.5 100L145.5 50L125.5 145L50.5 100Z" fill="white"/>
+                <path d="M50.5 100L125.5 145L100.5 120L50.5 100Z" fill="#C8DAEA" opacity="0.7"/>
               </svg>
             </div>
             <h1 className="text-white font-bold text-xs sm:text-base md:text-lg lg:text-xl truncate">
