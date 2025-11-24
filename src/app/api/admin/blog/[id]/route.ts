@@ -4,9 +4,10 @@ import { NextRequest, NextResponse } from 'next/server';
 // GET - Buscar post específico
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient();
+  const { id } = await params;
   
   try {
     const { data: { user } } = await supabase.auth.getUser();
@@ -32,7 +33,7 @@ export async function GET(
         category:categories(id, name, slug),
         author:profiles(id, full_name, email)
       `)
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (postError) throw postError;
@@ -47,20 +48,20 @@ export async function GET(
           slug
         )
       `)
-      .eq('post_id', params.id);
+      .eq('post_id', id);
 
     // Buscar mídia
     const { data: media } = await supabase
       .from('blog_media')
       .select('*')
-      .eq('post_id', params.id)
+      .eq('post_id', id)
       .order('display_order', { ascending: true });
 
     // Buscar links
     const { data: links } = await supabase
       .from('blog_links')
       .select('*')
-      .eq('post_id', params.id)
+      .eq('post_id', id)
       .order('display_order', { ascending: true });
 
     return NextResponse.json({
@@ -79,9 +80,10 @@ export async function GET(
 // PUT - Atualizar post
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient();
+  const { id } = await params;
   
   try {
     const { data: { user } } = await supabase.auth.getUser();
@@ -120,7 +122,7 @@ export async function PUT(
     const { data: currentPost } = await supabase
       .from('blog_posts')
       .select('published_at')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     // Atualizar post
@@ -145,27 +147,27 @@ export async function PUT(
     const { data: post, error: postError } = await supabase
       .from('blog_posts')
       .update(updateData)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
     if (postError) throw postError;
 
     // Atualizar tags (remover antigas e adicionar novas)
-    await supabase.from('post_tags').delete().eq('post_id', params.id);
+    await supabase.from('post_tags').delete().eq('post_id', id);
     if (tags && tags.length > 0) {
       const tagInserts = tags.map((tagId: string) => ({
-        post_id: params.id,
+        post_id: id,
         tag_id: tagId
       }));
       await supabase.from('post_tags').insert(tagInserts);
     }
 
     // Atualizar mídia
-    await supabase.from('blog_media').delete().eq('post_id', params.id);
+    await supabase.from('blog_media').delete().eq('post_id', id);
     if (media && media.length > 0) {
       const mediaInserts = media.map((item: any) => ({
-        post_id: params.id,
+        post_id: id,
         media_type: item.media_type,
         media_url: item.media_url,
         alt_text: item.alt_text,
@@ -176,10 +178,10 @@ export async function PUT(
     }
 
     // Atualizar links
-    await supabase.from('blog_links').delete().eq('post_id', params.id);
+    await supabase.from('blog_links').delete().eq('post_id', id);
     if (links && links.length > 0) {
       const linkInserts = links.map((link: any) => ({
-        post_id: params.id,
+        post_id: id,
         link_text: link.link_text,
         link_url: link.link_url,
         link_type: link.link_type || 'external',
@@ -197,9 +199,10 @@ export async function PUT(
 // DELETE - Deletar post
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient();
+  const { id } = await params;
   
   try {
     const { data: { user } } = await supabase.auth.getUser();
@@ -217,7 +220,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Acesso negado' }, { status: 403 });
     }
 
-    await supabase.from('blog_posts').delete().eq('id', params.id);
+    await supabase.from('blog_posts').delete().eq('id', id);
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

@@ -189,8 +189,8 @@ export async function POST(request: NextRequest) {
         qrCodeImage = await QRCode.toDataURL(pixResponse.pixCode, {
           errorCorrectionLevel: 'M',
           type: 'image/png',
-          quality: 0.92,
           margin: 1,
+          width: 300,
           color: {
             dark: '#000000',
             light: '#FFFFFF'

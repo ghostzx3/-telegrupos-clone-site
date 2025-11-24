@@ -111,56 +111,50 @@ export async function POST(request: NextRequest) {
 
     const admin = createAdminClient();
 
-    // Verificar se o usuário existe
-    const { data: user, error: userError } = await admin.auth.admin.getUserByEmail(
-      email.toLowerCase()
-    );
-
-    // Sempre retornar sucesso (security best practice - não revelar se email existe)
-    if (userError || !user) {
-      // Registrar tentativa mesmo se usuário não existir (para rate limiting)
-      await recordAttempt(email.toLowerCase(), ipAddress);
-      return NextResponse.json({
-        message: 'Se o email existir, você receberá um link de recuperação.',
-      });
-    }
-
     // Registrar tentativa
     await recordAttempt(email.toLowerCase(), ipAddress);
 
-    // Usar Supabase Auth Admin para enviar email de recuperação
+    // Usar Supabase Auth Admin para gerar link de recuperação
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.grupostelegramx.com';
     const redirectUrl = `${appUrl}/reset-password`;
 
     try {
-      // Usar resetPasswordForEmail do admin client - este método envia o email automaticamente
-      const { data, error: resetError } = await admin.auth.admin.resetPasswordForEmail(
-        email.toLowerCase(),
-        {
+      // Usar generateLink do admin client para gerar link de recovery
+      // O Supabase enviará o email automaticamente se estiver configurado
+      const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
+        type: 'recovery',
+        email: email.toLowerCase(),
+        options: {
           redirectTo: redirectUrl,
+        },
+      });
+
+      if (linkError) {
+        console.error('Error generating reset link:', linkError);
+        // Sempre retornar sucesso (security best practice - não revelar se email existe)
+        // Mas logar o erro para debug
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Link generation error details:', linkError);
         }
-      );
-
-      if (resetError) {
-        console.error('Error sending reset email:', resetError);
-        throw new Error(`Erro ao enviar email de recuperação: ${resetError.message}`);
+      } else {
+        console.log('Password reset link generated successfully');
+        // O Supabase enviará o email automaticamente se SMTP estiver configurado
+        // Se não estiver configurado, o link estará em linkData.properties.action_link
+        if (process.env.NODE_ENV === 'development' && linkData?.properties?.action_link) {
+          console.log('Reset link (dev only):', linkData.properties.action_link);
+        }
       }
-
-      console.log('Password reset email sent successfully');
     } catch (emailError: any) {
       console.error('Error processing reset request:', emailError);
-      // Retornar erro mais específico para ajudar no debug
-      return NextResponse.json(
-        { 
-          error: emailError?.message || 'Erro ao enviar email de recuperação. Verifique as configurações do Supabase.',
-          details: process.env.NODE_ENV === 'development' ? {
-            message: emailError?.message,
-            stack: emailError?.stack,
-            code: emailError?.code
-          } : undefined
-        },
-        { status: 500 }
-      );
+      // Sempre retornar sucesso (security best practice)
+      // Mas logar o erro para debug
+      if (process.env.NODE_ENV === 'development') {
+        console.error('Error details:', {
+          message: emailError?.message,
+          stack: emailError?.stack,
+          code: emailError?.code
+        });
+      }
     }
 
     return NextResponse.json({

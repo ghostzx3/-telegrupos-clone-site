@@ -3,9 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   const supabase = await createClient();
+  const { slug } = await params;
 
   try {
     // Fetch group
@@ -20,7 +21,7 @@ export async function GET(
           color
         )
       `)
-      .eq('slug', params.slug)
+      .eq('slug', slug)
       .eq('status', 'approved')
       .single();
 
@@ -82,9 +83,10 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   const supabase = await createClient();
+  const { slug } = await params;
   const { action } = await request.json();
 
   try {
@@ -92,7 +94,7 @@ export async function PATCH(
     const { data: group } = await supabase
       .from('groups')
       .select('id, click_count')
-      .eq('slug', params.slug)
+      .eq('slug', slug)
       .single();
 
     if (!group) {
