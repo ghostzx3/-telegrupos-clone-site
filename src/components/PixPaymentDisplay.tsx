@@ -189,7 +189,7 @@ export function PixPaymentDisplay({
               </p>
               <Button
                 onClick={handleCopy}
-                className="w-full bg-[#038ede] hover:bg-[#0277c7] text-white"
+                className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-base font-medium h-12 sm:h-11 min-h-[44px]"
                 size="lg"
               >
                 {copied ? (

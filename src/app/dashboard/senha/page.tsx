@@ -153,22 +153,22 @@ export default function SenhaPage() {
 
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
       <DashboardSidebar activeItem="senha" />
       
-      <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Senha de Acesso</h1>
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Senha de Acesso</h1>
 
         <Card className="max-w-2xl">
           <CardHeader>
             <div className="flex items-center gap-3">
-              <Lock className="w-6 h-6 text-gray-700" />
-              <CardTitle>
+              <Lock className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 flex-shrink-0" />
+              <CardTitle className="text-lg sm:text-xl">
                 {isRecovery ? "Redefinir Senha" : "Alterar Senha"}
               </CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 sm:space-y-5">
             {error && (
               <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
                 {error}
@@ -183,7 +183,7 @@ export default function SenhaPage() {
 
             {!isRecovery && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                   Senha Atual
                 </label>
                 <Input
@@ -191,12 +191,14 @@ export default function SenhaPage() {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Digite sua senha atual"
+                  className="h-12 sm:h-11 text-base"
+                  autoComplete="current-password"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                 Nova Senha
               </label>
               <Input
@@ -204,11 +206,13 @@ export default function SenhaPage() {
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Digite sua nova senha (mínimo 6 caracteres)"
+                className="h-12 sm:h-11 text-base"
+                autoComplete="new-password"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                 Confirmar Nova Senha
               </label>
               <Input
@@ -216,13 +220,15 @@ export default function SenhaPage() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirme sua nova senha"
+                className="h-12 sm:h-11 text-base"
+                autoComplete="new-password"
               />
             </div>
 
             <Button
               onClick={handleChangePassword}
               disabled={saving}
-              className="w-full bg-[#038ede] hover:bg-[#0277c7] text-white"
+              className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-base font-medium h-12 min-h-[44px]"
             >
               <Save className="w-4 h-4 mr-2" />
               {saving ? 'Salvando...' : 'Alterar Senha'}
@@ -230,13 +236,13 @@ export default function SenhaPage() {
 
             {!isRecovery && (
               <div className="pt-4 border-t">
-                <p className="text-sm text-gray-600 mb-2">
+                <p className="text-sm sm:text-base text-gray-600 mb-3">
                   Esqueceu sua senha?
                 </p>
                 <Button
                   onClick={handleRequestPasswordReset}
                   variant="outline"
-                  className="w-full"
+                  className="w-full h-12 min-h-[44px] text-base font-medium"
                 >
                   Enviar Link de Recuperação por Email
                 </Button>

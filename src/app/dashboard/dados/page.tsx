@@ -91,17 +91,17 @@ export default function MeusDadosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
       <DashboardSidebar activeItem="dados" />
       
-      <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Meus Dados</h1>
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Meus Dados</h1>
 
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>Informações da Conta</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Informações da Conta</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 sm:space-y-5">
             {success && (
               <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
                 {success}
@@ -109,7 +109,7 @@ export default function MeusDadosPage() {
             )}
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                 Nome Completo
               </label>
               <Input
@@ -117,20 +117,22 @@ export default function MeusDadosPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="Seu nome completo"
+                className="h-12 sm:h-11 text-base"
+                autoComplete="name"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                 Email
               </label>
               <Input
                 type="email"
                 value={email}
                 disabled
-                className="bg-gray-100"
+                className="bg-gray-100 h-12 sm:h-11 text-base"
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="text-xs sm:text-sm text-gray-500 mt-1.5">
                 O email não pode ser alterado
               </p>
             </div>
@@ -138,7 +140,7 @@ export default function MeusDadosPage() {
             <Button
               onClick={handleSave}
               disabled={saving}
-              className="bg-[#038ede] hover:bg-[#0277c7] text-white"
+              className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-base font-medium h-12 min-h-[44px]"
             >
               <Save className="w-4 h-4 mr-2" />
               {saving ? 'Salvando...' : 'Salvar Alterações'}
@@ -149,5 +151,6 @@ export default function MeusDadosPage() {
     </div>
   );
 }
+
 
 

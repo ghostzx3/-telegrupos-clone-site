@@ -56,6 +56,29 @@
   body {
     @apply bg-[#2c2c2c] text-foreground;
   }
+  
+  /* Mobile-first: Melhorar legibilidade em telas pequenas */
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Garantir que inputs e botões sejam legíveis em mobile */
+  input, textarea, select, button {
+    font-size: 16px; /* Previne zoom automático no iOS */
+  }
+  
+  @media (min-width: 640px) {
+    input, textarea, select, button {
+      font-size: inherit;
+    }
+  }
+  
+  /* Melhorar área de toque em mobile */
+  button, a, [role="button"] {
+    -webkit-tap-highlight-color: rgba(3, 142, 222, 0.2);
+    touch-action: manipulation;
+  }
 }
 
 /* Custom scrollbar */

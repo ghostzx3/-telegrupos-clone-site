@@ -144,3 +144,4 @@ CREATE TRIGGER set_blog_posts_updated_at
   FOR EACH ROW EXECUTE FUNCTION public.handle_updated_at();
 
 
+

@@ -244,3 +244,4 @@ git push origin main
 
 **Ação imediata:** Vá para https://vercel.com/dashboard e faça um redeploy manual agora para atualizar o site!
 
+

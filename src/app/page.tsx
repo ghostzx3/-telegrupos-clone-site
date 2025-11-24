@@ -156,7 +156,7 @@ export default function Home() {
                     e.stopPropagation();
                     setIsSidebarOpen(!isSidebarOpen);
                   }}
-                  className="lg:hidden p-2 text-white hover:bg-white/10 rounded transition-colors"
+                  className="lg:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:bg-white/10 active:bg-white/20 rounded-md transition-colors"
                   aria-label="Abrir categorias"
                   type="button"
                 >
@@ -173,7 +173,7 @@ export default function Home() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 sm:px-4 py-2 rounded-md bg-white text-gray-900 border-none text-sm sm:text-base w-full sm:w-auto"
+                className="px-4 py-3 sm:py-2.5 rounded-md bg-white text-gray-900 border-none text-sm sm:text-base w-full sm:w-auto h-12 sm:h-auto min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#038ede]"
               >
                 <option value="created_at">Mais Recentes</option>
                 <option value="popular">Mais Populares</option>
@@ -219,7 +219,7 @@ export default function Home() {
                 <Button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50 text-sm sm:text-base px-3 sm:px-4"
+                  className="bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white disabled:opacity-50 text-sm sm:text-base px-4 sm:px-5 h-11 sm:h-10 min-h-[44px]"
                 >
                   Anterior
                 </Button>
@@ -229,10 +229,10 @@ export default function Home() {
                     <Button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`text-sm sm:text-base min-w-[2.5rem] sm:min-w-[3rem] ${
+                      className={`text-sm sm:text-base min-w-[44px] min-h-[44px] h-11 sm:h-10 ${
                         currentPage === page
-                          ? "bg-[#038ede] text-white"
-                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          ? "bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300 active:bg-gray-400"
                       }`}
                     >
                       {page}
@@ -243,7 +243,7 @@ export default function Home() {
                 <Button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50 text-sm sm:text-base px-3 sm:px-4"
+                  className="bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white disabled:opacity-50 text-sm sm:text-base px-4 sm:px-5 h-11 sm:h-10 min-h-[44px]"
                 >
                   Próximo
                 </Button>

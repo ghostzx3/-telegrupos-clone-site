@@ -110,12 +110,12 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto mx-4">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">
+          <DialogTitle className="text-xl sm:text-2xl font-bold">
             {isLogin ? "Entrar" : "Cadastrar"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-sm sm:text-base">
             {isLogin
               ? "Entre com sua conta para acessar recursos exclusivos"
               : "Crie sua conta para começar a compartilhar grupos"}
@@ -131,7 +131,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
             )}
 
             <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">
+              <label className="text-sm sm:text-base font-medium text-gray-700 mb-2 block">
                 Email
               </label>
               <Input
@@ -140,13 +140,15 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 value={forgotPasswordEmail}
                 onChange={(e) => setForgotPasswordEmail(e.target.value)}
                 required
+                className="h-12 sm:h-11 text-base"
+                autoComplete="email"
               />
             </div>
 
             <Button
               type="button"
               onClick={handleForgotPassword}
-              className="w-full bg-[#038ede] hover:bg-[#0277c7] text-white"
+              className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-base font-medium h-12 min-h-[44px]"
               disabled={loading}
             >
               {loading ? "Enviando..." : "Enviar Link de Recuperação"}
@@ -195,7 +197,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
             {!isLogin && (
             <div>
-              <label className="text-sm font-medium text-gray-700 mb-1 block">
+              <label className="text-sm sm:text-base font-medium text-gray-700 mb-2 block">
                 Nome
               </label>
               <Input
@@ -205,12 +207,14 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 onChange={(e) => setName(e.target.value)}
                 required
                 disabled={loading}
+                className="h-12 sm:h-11 text-base"
+                autoComplete="name"
               />
             </div>
           )}
 
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">
+            <label className="text-sm sm:text-base font-medium text-gray-700 mb-2 block">
               Email
             </label>
             <Input
@@ -219,11 +223,13 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
+              className="h-12 sm:h-11 text-base"
+              autoComplete="email"
             />
           </div>
 
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">
+            <label className="text-sm sm:text-base font-medium text-gray-700 mb-2 block">
               Senha
             </label>
             <Input
@@ -232,23 +238,25 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              className="h-12 sm:h-11 text-base"
+              autoComplete={isLogin ? "current-password" : "new-password"}
             />
           </div>
 
           <Button
             type="submit"
-            className="w-full bg-[#038ede] hover:bg-[#0277c7] text-white"
+            className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-base font-medium h-12 min-h-[44px]"
             disabled={loading}
           >
             {loading ? "Processando..." : isLogin ? "Entrar" : "Cadastrar"}
           </Button>
 
-          <div className="text-center space-y-2">
+          <div className="text-center space-y-3 pt-2">
             {isLogin && (
               <button
                 type="button"
                 onClick={handleForgotPassword}
-                className="block w-full text-sm text-[#038ede] hover:underline"
+                className="block w-full text-sm sm:text-base text-[#038ede] hover:underline min-h-[44px] flex items-center justify-center"
               >
                 Esqueci a senha
               </button>
@@ -256,7 +264,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-[#038ede] hover:underline"
+              className="text-sm sm:text-base text-[#038ede] hover:underline min-h-[44px] flex items-center justify-center w-full"
             >
               {isLogin
                 ? "Não tem conta? Cadastre-se"

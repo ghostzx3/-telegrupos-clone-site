@@ -94,18 +94,18 @@ export default function CadastrarGrupoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
       <DashboardSidebar activeItem="cadastrar" />
       
-      <main className="flex-1 p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Cadastrar Grupo</h1>
+      <main className="flex-1 p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Cadastrar Grupo</h1>
 
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>Informações do Grupo</CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Informações do Grupo</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
               {error && (
                 <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
                   {error}
@@ -113,7 +113,7 @@ export default function CadastrarGrupoPage() {
               )}
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                   Nome do Grupo *
                 </label>
                 <Input
@@ -123,11 +123,12 @@ export default function CadastrarGrupoPage() {
                   placeholder="Nome do seu grupo"
                   required
                   disabled={saving}
+                  className="h-12 sm:h-11 text-base"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                   Link do Grupo *
                 </label>
                 <Input
@@ -137,11 +138,12 @@ export default function CadastrarGrupoPage() {
                   placeholder="https://t.me/..."
                   required
                   disabled={saving}
+                  className="h-12 sm:h-11 text-base"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                   URL da Imagem
                 </label>
                 <Input
@@ -150,17 +152,18 @@ export default function CadastrarGrupoPage() {
                   onChange={(e) => setImageUrl(e.target.value)}
                   placeholder="https://exemplo.com/imagem.jpg"
                   disabled={saving}
+                  className="h-12 sm:h-11 text-base"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                   Categoria *
                 </label>
                 <select
                   value={categoryId}
                   onChange={(e) => setCategoryId(e.target.value)}
-                  className="w-full h-10 px-3 rounded-md border border-input bg-background"
+                  className="w-full h-12 sm:h-11 px-4 text-base rounded-md border border-input bg-background focus:outline-none focus:ring-2 focus:ring-[#038ede]"
                   required
                   disabled={saving}
                 >
@@ -174,14 +177,14 @@ export default function CadastrarGrupoPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
                   Descrição (opcional)
                 </label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Descreva seu grupo..."
-                  className="w-full min-h-[100px] px-3 py-2 rounded-md border border-input bg-background resize-none"
+                  className="w-full min-h-[120px] sm:min-h-[100px] px-4 py-3 text-base rounded-md border border-input bg-background resize-none focus:outline-none focus:ring-2 focus:ring-[#038ede]"
                   disabled={saving}
                 />
               </div>
@@ -189,7 +192,7 @@ export default function CadastrarGrupoPage() {
               <Button
                 type="submit"
                 disabled={saving}
-                className="w-full bg-[#038ede] hover:bg-[#0277c7] text-white"
+                className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-base font-medium h-12 min-h-[44px]"
               >
                 <Save className="w-4 h-4 mr-2" />
                 {saving ? "Enviando..." : "Enviar Grupo"}
@@ -201,5 +204,6 @@ export default function CadastrarGrupoPage() {
     </div>
   );
 }
+
 
 

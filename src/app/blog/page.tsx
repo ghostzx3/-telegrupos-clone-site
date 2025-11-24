@@ -179,24 +179,24 @@ export default function BlogPage() {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex justify-center gap-2 mt-8">
+              <div className="flex flex-wrap justify-center gap-2 mt-6 sm:mt-8">
                 <Button
                   onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
                   disabled={currentPage === 1}
-                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50"
+                  className="bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white disabled:opacity-50 text-sm sm:text-base px-4 sm:px-5 h-11 sm:h-10 min-h-[44px]"
                 >
                   Anterior
                 </Button>
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <Button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`${
+                      className={`text-sm sm:text-base min-w-[44px] min-h-[44px] h-11 sm:h-10 ${
                         currentPage === page
-                          ? "bg-[#038ede] text-white"
-                          : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                          ? "bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white"
+                          : "bg-gray-200 text-gray-700 hover:bg-gray-300 active:bg-gray-400"
                       }`}
                     >
                       {page}
@@ -207,7 +207,7 @@ export default function BlogPage() {
                 <Button
                   onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
                   disabled={currentPage === totalPages}
-                  className="bg-[#038ede] hover:bg-[#0277c7] text-white disabled:opacity-50"
+                  className="bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white disabled:opacity-50 text-sm sm:text-base px-4 sm:px-5 h-11 sm:h-10 min-h-[44px]"
                 >
                   Próximo
                 </Button>

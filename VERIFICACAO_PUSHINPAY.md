@@ -158,3 +158,4 @@ curl http://localhost:3000/api/payments/create-pix
 Se ambos retornarem JSON válido, a configuração básica está correta!
 
 
+

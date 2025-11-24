@@ -165,3 +165,4 @@ Se tiver problemas:
 4. Verifique os logs do Supabase
 
 
+

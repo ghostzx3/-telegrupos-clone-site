@@ -185,9 +185,9 @@ export default function GroupPage() {
               <div className="mb-6">
                 <Button
                   onClick={handleEnterGroup}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white text-lg py-6"
+                  className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white text-base sm:text-lg font-medium py-5 sm:py-6 h-14 sm:h-16 min-h-[56px]"
                 >
-                  <ExternalLink className="w-5 h-5 mr-2" />
+                  <ExternalLink className="w-5 h-5 sm:w-6 sm:h-6 mr-2" />
                   ENTRAR NO GRUPO
                 </Button>
               </div>
