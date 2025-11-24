@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Small Cake Font */
+@font-face {
+  font-family: 'Small Cake';
+  src: url('/fonts/SmallCake.woff2') format('woff2'),
+       url('/fonts/SmallCake.woff') format('woff'),
+       url('/fonts/SmallCake.ttf') format('truetype'),
+       url('/fonts/SmallCake.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
