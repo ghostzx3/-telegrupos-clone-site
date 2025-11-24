@@ -4,6 +4,7 @@ import { Search, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import Image from "next/image";
 
 interface HeaderProps {
   onSearch: (query: string) => void;
@@ -35,21 +36,14 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
         <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo */}
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0 min-w-0">
-            {/* Ícone do Telegram - Logo oficial preciso */}
+            {/* Ícone do Telegram - Logo do site telegrupos.com.br */}
             <div className="relative flex-shrink-0 aspect-square w-6 h-6 sm:w-7 sm:h-7">
-              <svg 
-                viewBox="0 0 200 200" 
-                fill="none" 
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-full h-full"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                {/* Círculo azul de fundo - cor oficial do Telegram */}
-                <circle cx="100" cy="100" r="100" fill="#229ED9"/>
-                {/* Avião de papel do Telegram - path oficial */}
-                <path d="M50.5 100L145.5 50L125.5 145L50.5 100Z" fill="white"/>
-                <path d="M50.5 100L125.5 145L100.5 120L50.5 100Z" fill="#C8DAEA" opacity="0.7"/>
-              </svg>
+              <img
+                src="https://telegram.org/img/t_logo.png"
+                alt="Telegram Logo"
+                className="w-full h-full object-contain"
+                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+              />
             </div>
             <h1 className="text-white font-bold text-base sm:text-lg md:text-xl lg:text-2xl truncate">
               Grupostelegramx.com
