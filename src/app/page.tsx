@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { Header } from "@/components/Header";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { GroupCard } from "@/components/GroupCard";
@@ -118,9 +119,19 @@ export default function Home() {
               setIsLoginModalOpen(true);
               setIsSidebarOpen(false);
             }}
-            onBoostClick={() => {
-              router.push('/dashboard/planos');
+            onBoostClick={async () => {
               setIsSidebarOpen(false);
+              // Verificar se o usuário está logado
+              const supabase = createClient();
+              const { data: { user } } = await supabase.auth.getUser();
+              
+              if (user) {
+                // Usuário logado - redirecionar para planos
+                router.push('/dashboard/planos');
+              } else {
+                // Usuário não logado - abrir modal de login
+                setIsLoginModalOpen(true);
+              }
             }}
           />
         </div>
