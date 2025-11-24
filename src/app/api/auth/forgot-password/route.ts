@@ -133,40 +133,31 @@ export async function POST(request: NextRequest) {
     const redirectUrl = `${appUrl}/reset-password`;
 
     try {
-      // Usar o admin client para gerar link de recuperação
-      // O método generateLink cria o link e envia o email automaticamente
-      const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
-        type: 'recovery',
-        email: email.toLowerCase(),
-        options: {
+      // Usar resetPasswordForEmail do admin client - este método envia o email automaticamente
+      const { data, error: resetError } = await admin.auth.admin.resetPasswordForEmail(
+        email.toLowerCase(),
+        {
           redirectTo: redirectUrl,
-        },
-      });
-
-      if (linkError) {
-        console.error('Error generating reset link:', linkError);
-        // Tentar método alternativo usando resetPasswordForEmail do admin
-        const { error: resetError } = await admin.auth.admin.resetPasswordForEmail(
-          email.toLowerCase(),
-          {
-            redirectTo: redirectUrl,
-          }
-        );
-
-        if (resetError) {
-          console.error('Error with resetPasswordForEmail:', resetError);
-          throw new Error(`Erro ao enviar email: ${resetError.message}`);
         }
-      } else {
-        console.log('Reset link generated successfully:', linkData);
+      );
+
+      if (resetError) {
+        console.error('Error sending reset email:', resetError);
+        throw new Error(`Erro ao enviar email de recuperação: ${resetError.message}`);
       }
+
+      console.log('Password reset email sent successfully');
     } catch (emailError: any) {
       console.error('Error processing reset request:', emailError);
-      // Retornar erro mais específico
+      // Retornar erro mais específico para ajudar no debug
       return NextResponse.json(
         { 
           error: emailError?.message || 'Erro ao enviar email de recuperação. Verifique as configurações do Supabase.',
-          details: process.env.NODE_ENV === 'development' ? emailError?.toString() : undefined
+          details: process.env.NODE_ENV === 'development' ? {
+            message: emailError?.message,
+            stack: emailError?.stack,
+            code: emailError?.code
+          } : undefined
         },
         { status: 500 }
       );
