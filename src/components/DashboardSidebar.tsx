@@ -44,10 +44,18 @@ export function DashboardSidebar({ activeItem }: DashboardSidebarProps) {
 
   return (
     <>
+      {/* Overlay for mobile - Deve estar antes do sidebar para não bloquear */}
+      {isMobileMenuOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-[45]"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white rounded-md shadow-lg transition-colors"
+        className="lg:hidden fixed top-4 left-4 z-[60] p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white rounded-md shadow-lg transition-colors"
         aria-label="Toggle menu"
         type="button"
       >
@@ -60,20 +68,12 @@ export function DashboardSidebar({ activeItem }: DashboardSidebarProps) {
 
       {/* Sidebar */}
       <aside className={`
-        fixed lg:static inset-y-0 left-0 z-40
+        fixed lg:static inset-y-0 left-0 z-[50]
         w-64 bg-gray-100 min-h-screen p-4
         transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        {/* Overlay for mobile */}
-        {isMobileMenuOpen && (
-          <div
-            className="lg:hidden fixed inset-0 bg-black/50 z-30"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-        )}
-
-        <div className="space-y-2">
+        <div className="space-y-2 relative">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeItem === item.id;
