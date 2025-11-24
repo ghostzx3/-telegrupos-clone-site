@@ -153,8 +153,8 @@ export default function Home() {
         <main className="flex-1 p-3 sm:p-4 md:p-6 w-full lg:w-auto">
           <div className="max-w-7xl mx-auto">
             {/* Title and Sort */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div className="flex items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6">
+              <div className="flex items-center gap-3 flex-1 min-w-0">
                 {/* Mobile Menu Button - Abrir categorias */}
                 <button
                   onClick={(e) => {
@@ -162,7 +162,7 @@ export default function Home() {
                     e.stopPropagation();
                     setIsSidebarOpen(!isSidebarOpen);
                   }}
-                  className="lg:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:bg-white/10 active:bg-white/20 rounded-md transition-colors"
+                  className="lg:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:bg-white/10 active:bg-white/20 rounded-md transition-colors flex-shrink-0"
                   aria-label="Abrir categorias"
                   type="button"
                 >
@@ -170,7 +170,7 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                   </svg>
                 </button>
-                <h2 className="text-xl sm:text-2xl font-bold text-white">
+                <h2 className="text-xl sm:text-2xl font-bold text-white truncate">
                   Grupos Telegram
                 </h2>
               </div>
@@ -179,7 +179,7 @@ export default function Home() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-4 py-3 sm:py-2.5 rounded-md bg-white text-gray-900 border-none text-sm sm:text-base w-full sm:w-auto h-12 sm:h-auto min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#038ede]"
+                className="px-2 py-1.5 sm:px-4 sm:py-2.5 rounded-md bg-white text-gray-900 border-none text-xs sm:text-base w-auto h-auto sm:min-h-[44px] focus:outline-none focus:ring-2 focus:ring-[#038ede] flex-shrink-0"
               >
                 <option value="created_at">Mais Recentes</option>
                 <option value="popular">Mais Populares</option>
