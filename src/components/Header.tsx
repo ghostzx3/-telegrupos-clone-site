@@ -48,7 +48,7 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
               />
             </div>
             <h1 className="text-white font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl truncate" style={{ fontFamily: "'Small Cake', sans-serif", letterSpacing: '0.02em' }}>
-              GruposTelegram<span style={{ color: '#FF0000' }}>X</span>
+              GruposTelegram<span style={{ color: '#FF0000', fontWeight: 900, textShadow: '1px 1px 2px rgba(0,0,0,0.3), 0 0 4px rgba(255,0,0,0.5)' }}>X</span>
             </h1>
           </div>
 
