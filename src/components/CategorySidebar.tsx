@@ -33,7 +33,7 @@ export function CategorySidebar({
           {/* Action Buttons */}
           <Button
             onClick={onSubmitGroupClick}
-            className="w-full justify-start bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-sm sm:text-base font-medium h-11 sm:h-12 min-h-[44px] px-4"
+            className="w-full justify-start bg-[#FF0000] hover:bg-[#E60000] active:bg-[#CC0000] text-white text-sm sm:text-base font-medium h-11 sm:h-12 min-h-[44px] px-4"
           >
             Enviar grupo
           </Button>
