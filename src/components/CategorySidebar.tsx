@@ -47,7 +47,7 @@ export function CategorySidebar({
 
           <Button
             onClick={onBoostClick}
-            className="w-full justify-start bg-[#d97706] hover:bg-[#c26806] active:bg-[#b85d05] text-white text-sm sm:text-base font-medium h-11 sm:h-12 min-h-[44px] px-4"
+            className="w-full justify-start bg-[#FF0000] hover:bg-[#E60000] active:bg-[#CC0000] text-white text-sm sm:text-base font-medium h-11 sm:h-12 min-h-[44px] px-4"
           >
             Impulsionar Grupo
           </Button>
