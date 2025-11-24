@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
-import { createClient } from '@supabase/supabase-js';
 
 // Configurações de segurança
 const MAX_ATTEMPTS_PER_HOUR = 5;
@@ -129,42 +128,48 @@ export async function POST(request: NextRequest) {
     // Registrar tentativa
     await recordAttempt(email.toLowerCase(), ipAddress);
 
-    // Usar Supabase Auth para enviar email de recuperação
-    // O método resetPasswordForEmail envia o email automaticamente
+    // Usar Supabase Auth Admin para enviar email de recuperação
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.grupostelegramx.com';
     const redirectUrl = `${appUrl}/reset-password`;
 
     try {
-      // Criar cliente Supabase temporário para usar resetPasswordForEmail
-      // Este método envia o email automaticamente usando os templates do Supabase
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-      const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-      
-      const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false,
+      // Usar o admin client para gerar link de recuperação
+      // O método generateLink cria o link e envia o email automaticamente
+      const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
+        type: 'recovery',
+        email: email.toLowerCase(),
+        options: {
+          redirectTo: redirectUrl,
         },
       });
 
-      // Usar o método que realmente envia o email
-      // O Supabase vai usar o template configurado em:
-      // Dashboard > Authentication > Email Templates > Reset Password
-      const { error: emailError } = await supabaseClient.auth.resetPasswordForEmail(
-        email.toLowerCase(),
-        {
-          redirectTo: redirectUrl,
-        }
-      );
+      if (linkError) {
+        console.error('Error generating reset link:', linkError);
+        // Tentar método alternativo usando resetPasswordForEmail do admin
+        const { error: resetError } = await admin.auth.admin.resetPasswordForEmail(
+          email.toLowerCase(),
+          {
+            redirectTo: redirectUrl,
+          }
+        );
 
-      if (emailError) {
-        console.error('Error sending reset email:', emailError);
-        // Não falhar a requisição (security best practice)
+        if (resetError) {
+          console.error('Error with resetPasswordForEmail:', resetError);
+          throw new Error(`Erro ao enviar email: ${resetError.message}`);
+        }
+      } else {
+        console.log('Reset link generated successfully:', linkData);
       }
-      // O email foi enviado automaticamente pelo Supabase
-    } catch (emailError) {
+    } catch (emailError: any) {
       console.error('Error processing reset request:', emailError);
-      // Não falhar a requisição se o email falhar (security best practice)
+      // Retornar erro mais específico
+      return NextResponse.json(
+        { 
+          error: emailError?.message || 'Erro ao enviar email de recuperação. Verifique as configurações do Supabase.',
+          details: process.env.NODE_ENV === 'development' ? emailError?.toString() : undefined
+        },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({
