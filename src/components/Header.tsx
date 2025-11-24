@@ -94,7 +94,7 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
           <div className="hidden md:flex items-center gap-2">
             <Button
               onClick={onSubmitGroupClick}
-              className="bg-[#d97706] hover:bg-[#c26806] text-white text-sm sm:text-base h-10 sm:h-11 px-3 sm:px-4 lg:px-5 min-h-[44px]"
+              className="bg-[#FF0000] hover:bg-[#E60000] active:bg-[#CC0000] text-white text-sm sm:text-base h-10 sm:h-11 px-3 sm:px-4 lg:px-5 min-h-[44px]"
             >
               <span className="hidden lg:inline">+ Enviar grupo</span>
               <span className="lg:hidden">+ Enviar</span>
@@ -132,7 +132,7 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
                   onSubmitGroupClick();
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full bg-[#d97706] hover:bg-[#c26806] active:bg-[#b85d05] text-white text-base font-medium h-12 min-h-[44px]"
+                className="w-full bg-[#FF0000] hover:bg-[#E60000] active:bg-[#CC0000] text-white text-base font-medium h-12 min-h-[44px]"
               >
                 + Enviar grupo
               </Button>
