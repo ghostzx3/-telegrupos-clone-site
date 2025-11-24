@@ -38,11 +38,13 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0 min-w-0">
             {/* Ícone do Telegram - Logo do site telegrupos.com.br */}
             <div className="relative flex-shrink-0 aspect-square w-6 h-6 sm:w-7 sm:h-7">
-              <img
+              <Image
                 src="https://telegram.org/img/t_logo.png"
                 alt="Telegram Logo"
+                width={28}
+                height={28}
                 className="w-full h-full object-contain"
-                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                unoptimized
               />
             </div>
             <h1 className="text-white font-bold text-base sm:text-lg md:text-xl lg:text-2xl truncate">
