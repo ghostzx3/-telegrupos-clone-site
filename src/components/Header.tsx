@@ -34,8 +34,8 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
     <header className="bg-[#038ede] shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
         <div className="flex items-center justify-between gap-2 sm:gap-4">
-          {/* Logo and Mobile Enviar Button */}
-          <div className="flex items-center gap-2 sm:gap-2 flex-1 min-w-0">
+          {/* Logo */}
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0 min-w-0">
             {/* Ícone do Telegram - Logo do site telegrupos.com.br */}
             <div className="relative flex-shrink-0 aspect-square w-6 h-6 sm:w-7 sm:h-7">
               <Image
@@ -62,14 +62,6 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
             >
               GruposTelegram<span style={{ color: '#FF0000', fontWeight: 900, textShadow: '1px 1px 2px rgba(0,0,0,0.3), 0 0 4px rgba(255,0,0,0.5)' }}>X</span>
             </h1>
-            
-            {/* Mobile Enviar Button - Visible on mobile, hidden on tablet+ */}
-            <Button
-              onClick={onSubmitGroupClick}
-              className="md:hidden bg-[#FF0000] hover:bg-[#E60000] active:bg-[#CC0000] text-white text-xs font-medium h-8 px-2.5 min-h-[36px] flex-shrink-0 ml-2"
-            >
-              + Enviar
-            </Button>
           </div>
 
           {/* Search Bar - Hidden on mobile, shown on tablet+ */}
@@ -87,7 +79,7 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
           {/* Mobile Menu Button - Minimum touch target 44x44px */}
           <button
             onClick={toggleMobileMenu}
-            className="md:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:bg-white/10 rounded-md transition-colors active:bg-white/20 flex-shrink-0"
+            className="md:hidden p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center text-white hover:bg-white/10 rounded-md transition-colors active:bg-white/20"
             aria-label="Toggle menu"
             type="button"
           >
