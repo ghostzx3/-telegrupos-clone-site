@@ -51,7 +51,7 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
                 <path d="M50.5 100L125.5 145L100.5 120L50.5 100Z" fill="#C8DAEA" opacity="0.7"/>
               </svg>
             </div>
-            <h1 className="text-white font-bold text-xs sm:text-base md:text-lg lg:text-xl truncate">
+            <h1 className="text-white font-bold text-base sm:text-lg md:text-xl lg:text-2xl truncate">
               Grupostelegramx.com
             </h1>
           </div>
