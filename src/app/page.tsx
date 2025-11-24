@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { GroupCard } from "@/components/GroupCard";
@@ -18,36 +19,24 @@ const SubmitGroupModal = dynamic(() => import("@/components/SubmitGroupModal").t
   ssr: false,
 });
 
-const PromotionModal = dynamic(() => import("@/components/PromotionModal").then(mod => ({ default: mod.PromotionModal })), {
-  ssr: false,
-});
+// PromotionModal removido - redirecionando para planos
 
 const ITEMS_PER_PAGE = 24;
 
 export default function Home() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'created_at' | 'popular' | 'members'>('created_at');
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSubmitGroupModalOpen, setIsSubmitGroupModalOpen] = useState(false);
-  const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
   const [groups, setGroups] = useState<GroupWithCategory[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  // Show promotion modal on first visit
-  useEffect(() => {
-    const hasSeenPromo = sessionStorage.getItem("hasSeenPromo");
-    if (!hasSeenPromo) {
-      const timer = setTimeout(() => {
-        setIsPromotionModalOpen(true);
-        sessionStorage.setItem("hasSeenPromo", "true");
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  // Modal promocional removido
 
   // Fetch categories
   useEffect(() => {
@@ -130,7 +119,7 @@ export default function Home() {
               setIsSidebarOpen(false);
             }}
             onBoostClick={() => {
-              setIsPromotionModalOpen(true);
+              router.push('/dashboard/planos');
               setIsSidebarOpen(false);
             }}
           />
@@ -296,10 +285,6 @@ export default function Home() {
       <SubmitGroupModal
         isOpen={isSubmitGroupModalOpen}
         onClose={() => setIsSubmitGroupModalOpen(false)}
-      />
-      <PromotionModal
-        isOpen={isPromotionModalOpen}
-        onClose={() => setIsPromotionModalOpen(false)}
       />
     </div>
   );

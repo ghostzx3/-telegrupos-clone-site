@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
 import { CategorySidebar } from "@/components/CategorySidebar";
 import { BlogPostCard } from "@/components/BlogPostCard";
@@ -18,19 +19,17 @@ const SubmitGroupModal = dynamic(() => import("@/components/SubmitGroupModal").t
   ssr: false,
 });
 
-const PromotionModal = dynamic(() => import("@/components/PromotionModal").then(mod => ({ default: mod.PromotionModal })), {
-  ssr: false,
-});
+// PromotionModal removido - redirecionando para planos
 
 const ITEMS_PER_PAGE = 12;
 
 export default function BlogPage() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isSubmitGroupModalOpen, setIsSubmitGroupModalOpen] = useState(false);
-  const [isPromotionModalOpen, setIsPromotionModalOpen] = useState(false);
   const [posts, setPosts] = useState<BlogPostWithTags[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
@@ -104,7 +103,7 @@ export default function BlogPage() {
             onCategorySelect={() => {}}
             onSubmitGroupClick={() => setIsSubmitGroupModalOpen(true)}
             onLoginClick={() => setIsLoginModalOpen(true)}
-            onBoostClick={() => setIsPromotionModalOpen(true)}
+            onBoostClick={() => router.push('/dashboard/planos')}
           />
         </div>
 
@@ -225,10 +224,6 @@ export default function BlogPage() {
       <SubmitGroupModal
         isOpen={isSubmitGroupModalOpen}
         onClose={() => setIsSubmitGroupModalOpen(false)}
-      />
-      <PromotionModal
-        isOpen={isPromotionModalOpen}
-        onClose={() => setIsPromotionModalOpen(false)}
       />
     </div>
   );
