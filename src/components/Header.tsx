@@ -36,8 +36,16 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
           {/* Logo */}
           <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0 min-w-0">
             {/* Ícone do Telegram */}
-            <div className="relative w-6 h-6 sm:w-7 sm:h-7 flex-shrink-0">
-              <svg className="w-full h-full" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div className="relative flex-shrink-0" style={{ width: '24px', height: '24px' }}>
+              <svg 
+                width="24" 
+                height="24" 
+                viewBox="0 0 240 240" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+                preserveAspectRatio="xMidYMid meet"
+                style={{ width: '100%', height: '100%' }}
+              >
                 {/* Círculo azul de fundo */}
                 <circle cx="120" cy="120" r="120" fill="#0088cc"/>
                 {/* Avião de papel do Telegram */}
