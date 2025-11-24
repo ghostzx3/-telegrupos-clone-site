@@ -121,15 +121,21 @@ export default function Home() {
             }}
             onBoostClick={async () => {
               setIsSidebarOpen(false);
-              // Verificar se o usuário está logado
-              const supabase = createClient();
-              const { data: { user } } = await supabase.auth.getUser();
-              
-              if (user) {
-                // Usuário logado - redirecionar para planos
-                router.push('/dashboard/planos');
-              } else {
-                // Usuário não logado - abrir modal de login
+              try {
+                // Verificar se o usuário está logado
+                const supabase = createClient();
+                const { data: { user } } = await supabase.auth.getUser();
+                
+                if (user) {
+                  // Usuário logado - redirecionar para planos
+                  window.location.href = '/dashboard/planos';
+                } else {
+                  // Usuário não logado - abrir modal de login
+                  setIsLoginModalOpen(true);
+                }
+              } catch (error) {
+                console.error('Erro ao verificar autenticação:', error);
+                // Em caso de erro, abrir modal de login
                 setIsLoginModalOpen(true);
               }
             }}
