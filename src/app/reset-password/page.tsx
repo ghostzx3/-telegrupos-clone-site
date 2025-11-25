@@ -106,18 +106,55 @@ function ResetPasswordContent() {
     }
   }
 
+  // Validação robusta de senha
+  function validatePassword(password: string): { valid: boolean; errors: string[] } {
+    const errors: string[] = [];
+
+    if (password.length < 8) {
+      errors.push("A senha deve ter pelo menos 8 caracteres");
+    }
+
+    if (password.length > 128) {
+      errors.push("A senha não pode ter mais de 128 caracteres");
+    }
+
+    if (!/[a-z]/.test(password)) {
+      errors.push("A senha deve conter pelo menos uma letra minúscula");
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      errors.push("A senha deve conter pelo menos uma letra maiúscula");
+    }
+
+    if (!/[0-9]/.test(password)) {
+      errors.push("A senha deve conter pelo menos um número");
+    }
+
+    // Verificar caracteres especiais (opcional, mas recomendado)
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
+      errors.push("A senha deve conter pelo menos um caractere especial");
+    }
+
+    return {
+      valid: errors.length === 0,
+      errors,
+    };
+  }
+
   async function handleResetPassword() {
     setError("");
     setSuccess("");
 
-    // Validações
+    // Validações básicas
     if (!newPassword || !confirmPassword) {
       setError("Preencha todos os campos.");
       return;
     }
 
-    if (newPassword.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres.");
+    // Validação robusta de senha
+    const passwordValidation = validatePassword(newPassword);
+    if (!passwordValidation.valid) {
+      setError(passwordValidation.errors.join(". "));
       return;
     }
 
@@ -131,6 +168,13 @@ function ResetPasswordContent() {
     try {
       const supabase = createClient();
       
+      // Verificar se ainda há uma sessão válida (token ainda válido)
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      
+      if (sessionError || !session) {
+        throw new Error("Sessão expirada. Por favor, solicite um novo link de recuperação.");
+      }
+
       // Usar o método do Supabase para atualizar a senha
       // O Supabase já validou o token na sessão
       const { error: updateError } = await supabase.auth.updateUser({
@@ -138,10 +182,14 @@ function ResetPasswordContent() {
       });
 
       if (updateError) {
+        // Tratamento específico de erros do Supabase
+        if (updateError.message.includes('expired') || updateError.message.includes('invalid')) {
+          throw new Error("Token expirado ou inválido. Por favor, solicite um novo link de recuperação.");
+        }
         throw updateError;
       }
 
-      setSuccess("Senha alterada com sucesso! Redirecionando...");
+      setSuccess("Senha alterada com sucesso! Redirecionando para login...");
       
       // Fazer logout para forçar novo login
       await supabase.auth.signOut();
@@ -151,6 +199,7 @@ function ResetPasswordContent() {
         router.push('/?login=true');
       }, 2000);
     } catch (err: any) {
+      console.error('Error resetting password:', err);
       setError(err.message || "Erro ao alterar senha. Tente novamente.");
     } finally {
       setResetting(false);
@@ -235,9 +284,18 @@ function ResetPasswordContent() {
 
           {!success && (
             <>
-              <p className="text-sm text-gray-600">
-                Digite sua nova senha abaixo. Ela deve ter pelo menos 6 caracteres.
-              </p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                <p className="text-sm font-medium text-blue-900 mb-2">
+                  Requisitos da senha:
+                </p>
+                <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
+                  <li>Mínimo de 8 caracteres</li>
+                  <li>Pelo menos uma letra minúscula</li>
+                  <li>Pelo menos uma letra maiúscula</li>
+                  <li>Pelo menos um número</li>
+                  <li>Pelo menos um caractere especial (!@#$%^&*...)</li>
+                </ul>
+              </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -247,8 +305,10 @@ function ResetPasswordContent() {
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Digite sua nova senha (mínimo 6 caracteres)"
+                  placeholder="Digite sua nova senha"
                   disabled={resetting}
+                  className="h-12 text-base"
+                  autoComplete="new-password"
                 />
               </div>
 
@@ -262,8 +322,10 @@ function ResetPasswordContent() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirme sua nova senha"
                   disabled={resetting}
+                  className="h-12 text-base"
+                  autoComplete="new-password"
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !resetting) {
+                    if (e.key === 'Enter' && !resetting && newPassword && confirmPassword) {
                       handleResetPassword();
                     }
                   }}
@@ -272,8 +334,8 @@ function ResetPasswordContent() {
 
               <Button
                 onClick={handleResetPassword}
-                disabled={resetting || !newPassword || !confirmPassword}
-                className="w-full bg-[#038ede] hover:bg-[#0277c7] text-white"
+                disabled={resetting || !newPassword || !confirmPassword || newPassword.length < 8}
+                className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white h-12 text-base font-medium"
               >
                 {resetting ? (
                   <>

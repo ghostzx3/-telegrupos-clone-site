@@ -116,8 +116,8 @@ export async function POST(request: NextRequest) {
 
     // Usar Supabase Auth Admin para enviar link de recuperação
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.grupostelegramx.com';
-    // Redirecionar para /dashboard/senha quando solicitado do dashboard
-    const redirectUrl = `${appUrl}/dashboard/senha`;
+    // Redirecionar para /reset-password (página dedicada de reset)
+    const redirectUrl = `${appUrl}/reset-password`;
 
     try {
       // Usar resetPasswordForEmail do Supabase Admin
