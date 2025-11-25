@@ -7,14 +7,15 @@ import { DashboardSidebar } from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Lock, Save } from "lucide-react";
+import { Lock, Save, Mail } from "lucide-react";
 
 export default function SenhaPage() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState("");
+  const [sendingLink, setSendingLink] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -50,6 +51,7 @@ export default function SenhaPage() {
       return;
     }
 
+    setUserEmail(user.email || null);
     setIsAuthenticated(true);
     setLoading(false);
   }
@@ -71,48 +73,24 @@ export default function SenhaPage() {
     setSaving(true);
 
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
 
     try {
-      if (user && !isRecovery) {
-        // Usuário logado - precisa da senha atual
-        if (!currentPassword) {
-          setError("Digite sua senha atual");
-          setSaving(false);
-          return;
-        }
-
-        // Verificar senha atual
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: user.email!,
-          password: currentPassword,
-        });
-
-        if (signInError) {
-          setError("Senha atual incorreta");
-          setSaving(false);
-          return;
-        }
-      }
-
-      // Atualizar senha
+      // Atualizar senha (apenas quando vier do link de recuperação)
       const { error: updateError } = await supabase.auth.updateUser({
         password: newPassword,
       });
 
       if (updateError) throw updateError;
 
-      setSuccess("Senha alterada com sucesso!");
-      setCurrentPassword("");
+      setSuccess("Senha alterada com sucesso! Redirecionando...");
       setNewPassword("");
       setConfirmPassword("");
 
+      // Fazer logout para forçar novo login
+      await supabase.auth.signOut();
+
       setTimeout(() => {
-        if (user) {
-          router.push('/dashboard');
-        } else {
-          router.push('/');
-        }
+        router.push('/?login=true');
       }, 2000);
     } catch (err: any) {
       setError(err.message || "Erro ao alterar senha");
@@ -125,21 +103,31 @@ export default function SenhaPage() {
     setError("");
     setSuccess("");
 
-    const supabase = createClient();
-    const email = prompt("Digite seu email:");
+    if (!userEmail) {
+      setError("Email não encontrado. Faça login novamente.");
+      return;
+    }
 
-    if (!email) return;
+    setSendingLink(true);
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/dashboard/senha`,
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: userEmail }),
       });
 
-      if (error) throw error;
+      const data = await response.json();
 
-      setSuccess("Email de recuperação enviado! Verifique sua caixa de entrada.");
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao enviar email de recuperação');
+      }
+
+      setSuccess("Link de verificação enviado! Verifique sua caixa de entrada e clique no link para alterar sua senha.");
     } catch (err: any) {
       setError(err.message || "Erro ao enviar email de recuperação");
+    } finally {
+      setSendingLink(false);
     }
   }
 
@@ -181,72 +169,69 @@ export default function SenhaPage() {
               </div>
             )}
 
-            {!isRecovery && (
-              <div>
-                <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
-                  Senha Atual
-                </label>
-                <Input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Digite sua senha atual"
-                  className="h-12 sm:h-11 text-base"
-                  autoComplete="current-password"
-                />
-              </div>
-            )}
+            {isRecovery ? (
+              // Modo de recuperação - mostrar campos de nova senha
+              <>
+                <div>
+                  <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
+                    Nova Senha
+                  </label>
+                  <Input
+                    type="password"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Digite sua nova senha (mínimo 6 caracteres)"
+                    className="h-12 sm:h-11 text-base"
+                    autoComplete="new-password"
+                  />
+                </div>
 
-            <div>
-              <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
-                Nova Senha
-              </label>
-              <Input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="Digite sua nova senha (mínimo 6 caracteres)"
-                className="h-12 sm:h-11 text-base"
-                autoComplete="new-password"
-              />
-            </div>
+                <div>
+                  <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
+                    Confirmar Nova Senha
+                  </label>
+                  <Input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirme sua nova senha"
+                    className="h-12 sm:h-11 text-base"
+                    autoComplete="new-password"
+                  />
+                </div>
 
-            <div>
-              <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
-                Confirmar Nova Senha
-              </label>
-              <Input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirme sua nova senha"
-                className="h-12 sm:h-11 text-base"
-                autoComplete="new-password"
-              />
-            </div>
+                <Button
+                  onClick={handleChangePassword}
+                  disabled={saving}
+                  className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-base font-medium h-12 min-h-[44px]"
+                >
+                  <Save className="w-4 h-4 mr-2" />
+                  {saving ? 'Salvando...' : 'Alterar Senha'}
+                </Button>
+              </>
+            ) : (
+              // Modo normal - mostrar apenas botão para solicitar link
+              <>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                  <p className="text-sm sm:text-base text-gray-700 mb-2">
+                    Para alterar sua senha, você precisa verificar sua identidade através de um link enviado por email.
+                  </p>
+                  {userEmail && (
+                    <p className="text-sm text-gray-600">
+                      O link será enviado para: <strong>{userEmail}</strong>
+                    </p>
+                  )}
+                </div>
 
-            <Button
-              onClick={handleChangePassword}
-              disabled={saving}
-              className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-base font-medium h-12 min-h-[44px]"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              {saving ? 'Salvando...' : 'Alterar Senha'}
-            </Button>
-
-            {!isRecovery && (
-              <div className="pt-4 border-t">
-                <p className="text-sm sm:text-base text-gray-600 mb-3">
-                  Esqueceu sua senha?
-                </p>
                 <Button
                   onClick={handleRequestPasswordReset}
-                  variant="outline"
-                  className="w-full h-12 min-h-[44px] text-base font-medium"
+                  disabled={sendingLink}
+                  className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-base font-medium h-12 min-h-[44px]"
                 >
-                  Enviar Link de Recuperação por Email
+                  <Mail className="w-4 h-4 mr-2" />
+                  {sendingLink ? 'Enviando...' : 'Enviar Link de Verificação por Email'}
                 </Button>
-              </div>
+              </>
             )}
           </CardContent>
         </Card>
