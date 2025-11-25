@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { sendPasswordResetEmail } from '@/lib/email';
 
 // Configurações de segurança
 const MAX_ATTEMPTS_PER_HOUR = 5;
@@ -114,40 +115,63 @@ export async function POST(request: NextRequest) {
     // Registrar tentativa
     await recordAttempt(email.toLowerCase(), ipAddress);
 
-    // Usar Supabase Auth Admin para enviar link de recuperação
+    // Usar Supabase Auth Admin para gerar link de recuperação
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://www.grupostelegramx.com';
     // Redirecionar para /dashboard/senha quando solicitado do dashboard
     const redirectUrl = `${appUrl}/dashboard/senha`;
 
     try {
-      // Usar resetPasswordForEmail do admin client para enviar email de recovery
-      // O Supabase enviará o email automaticamente usando os templates configurados
-      const { data, error: resetError } = await admin.auth.admin.resetPasswordForEmail(
-        email.toLowerCase(),
-        {
+      // Gerar link de recuperação usando generateLink
+      const { data: linkData, error: linkError } = await admin.auth.admin.generateLink({
+        type: 'recovery',
+        email: email.toLowerCase(),
+        options: {
           redirectTo: redirectUrl,
-        }
-      );
+        },
+      });
 
-      if (resetError) {
-        console.error('Error sending reset email:', resetError);
+      if (linkError) {
+        console.error('Error generating reset link:', linkError);
         // Sempre retornar sucesso (security best practice - não revelar se email existe)
         // Mas logar o erro para debug
         if (process.env.NODE_ENV === 'development') {
-          console.error('Reset email error details:', resetError);
+          console.error('Link generation error details:', linkError);
         }
-      } else {
-        console.log('Password reset email sent successfully');
+        // Mesmo com erro, retornar sucesso para não revelar se email existe
+        return NextResponse.json({
+          message: 'Se o email existir, você receberá um link de recuperação.',
+        });
       }
-    } catch (emailError: any) {
-      console.error('Error processing reset request:', emailError);
+
+      // Extrair o link de recuperação
+      const resetLink = linkData?.properties?.action_link;
+      
+      if (!resetLink) {
+        console.error('No reset link generated');
+        // Retornar sucesso mesmo sem link (security best practice)
+        return NextResponse.json({
+          message: 'Se o email existir, você receberá um link de recuperação.',
+        });
+      }
+
+      // Enviar email usando Resend
+      try {
+        await sendPasswordResetEmail(email.toLowerCase(), resetLink);
+        console.log('Password reset email sent successfully');
+      } catch (emailError: any) {
+        console.error('Error sending email:', emailError);
+        // Mesmo com erro no envio, retornar sucesso (security best practice)
+        // O link foi gerado, então o usuário pode tentar novamente
+      }
+    } catch (error: any) {
+      console.error('Error processing reset request:', error);
       // Sempre retornar sucesso (security best practice)
       // Mas logar o erro para debug
       if (process.env.NODE_ENV === 'development') {
         console.error('Error details:', {
-          message: emailError?.message,
-          stack: emailError?.stack,
-          code: emailError?.code
+          message: error?.message,
+          stack: error?.stack,
+          code: error?.code
         });
       }
     }
