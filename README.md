@@ -43,8 +43,11 @@ The app uses PostgreSQL with these main tables:
 
 - Email/password signup and login
 - Email verification
+- **Password recovery via email** (sem exigir senha atual)
 - Session management
 - Admin role system
+
+**📖 [Documentação Completa do Sistema de Recuperação de Senha](./SISTEMA_RECUPERACAO_SENHA.md)**
 
 ### Payments (PushInPay - PIX)
 
@@ -155,6 +158,8 @@ Edit `src/app/page.tsx` - scroll to footer section (~line 165)
 ### 1. Install Dependencies
 
 ```bash
+npm install
+# ou
 bun install
 ```
 
@@ -177,15 +182,35 @@ Quick summary:
 
 ```bash
 # Copy example environment file
-cp .env.local.example .env.local
+cp .env.example .env.local
 
 # Edit .env.local with your credentials
+# Required variables:
+# - NEXT_PUBLIC_SUPABASE_URL
+# - NEXT_PUBLIC_SUPABASE_ANON_KEY
+# - SUPABASE_SERVICE_ROLE_KEY
+# - NEXT_PUBLIC_APP_URL
 ```
 
 ### 4. Run Development Server
 
 ```bash
+npm run dev
+# ou
 bun run dev
+```
+
+### 5. Run Tests
+
+```bash
+# Run all tests
+npm test
+
+# Watch mode (development)
+npm run test:watch
+
+# With coverage
+npm run test:coverage
 ```
 
 ### 5. Run Stripe Webhook (separate terminal)
@@ -198,11 +223,61 @@ stripe listen --forward-to localhost:3000/api/webhooks/stripe
 
 ```bash
 # Build for production
+npm run build
+# ou
 bun run build
 
 # Run production build
+npm run start
+# ou
 bun run start
 ```
+
+## Testing
+
+O projeto inclui testes automatizados usando Jest e Testing Library.
+
+### Executar Testes
+
+```bash
+# Todos os testes
+npm test
+
+# Modo watch (desenvolvimento)
+npm run test:watch
+
+# Com cobertura de código
+npm run test:coverage
+```
+
+### Cobertura Mínima
+
+- Branches: 70%
+- Functions: 70%
+- Lines: 70%
+- Statements: 70%
+
+### CI/CD
+
+O projeto inclui GitHub Actions (`.github/workflows/ci.yml`) que executa:
+- Linting
+- Testes automatizados
+- Build de produção
+- Verificação de cobertura de código
+
+## Password Recovery System
+
+O sistema de recuperação de senha está totalmente implementado e funcional:
+
+- ✅ Página `/forgot-password` para solicitar reset
+- ✅ Página `/reset-password` para definir nova senha
+- ✅ Rate limiting (5/hora por IP, 3/hora por email)
+- ✅ Validação forte de senha (mínimo 10 caracteres)
+- ✅ Logs estruturados
+- ✅ Testes automatizados
+- ✅ Integração completa com Supabase Auth
+
+**📖 [Documentação Completa](./SISTEMA_RECUPERACAO_SENHA.md)**
 
 ## File Structure
 

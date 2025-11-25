@@ -178,3 +178,4 @@ No Supabase Dashboard você pode:
 - [Supabase Auth Email](https://supabase.com/docs/guides/auth/auth-email)
 - [Supabase SMTP Settings](https://supabase.com/docs/guides/auth/auth-smtp)
 
+

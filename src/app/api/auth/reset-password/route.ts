@@ -21,9 +21,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (newPassword.length < 6) {
+    // Validação robusta de senha (mínimo 10 caracteres)
+    if (newPassword.length < 10) {
       return NextResponse.json(
-        { error: 'A senha deve ter pelo menos 6 caracteres' },
+        { error: 'A senha deve ter pelo menos 10 caracteres' },
+        { status: 400 }
+      );
+    }
+
+    // Validação adicional de complexidade
+    if (!/[a-z]/.test(newPassword)) {
+      return NextResponse.json(
+        { error: 'A senha deve conter pelo menos uma letra minúscula' },
+        { status: 400 }
+      );
+    }
+
+    if (!/[A-Z]/.test(newPassword)) {
+      return NextResponse.json(
+        { error: 'A senha deve conter pelo menos uma letra maiúscula' },
+        { status: 400 }
+      );
+    }
+
+    if (!/[0-9]/.test(newPassword)) {
+      return NextResponse.json(
+        { error: 'A senha deve conter pelo menos um número' },
+        { status: 400 }
+      );
+    }
+
+    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(newPassword)) {
+      return NextResponse.json(
+        { error: 'A senha deve conter pelo menos um caractere especial' },
         { status: 400 }
       );
     }
@@ -101,6 +131,8 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
 
 
 

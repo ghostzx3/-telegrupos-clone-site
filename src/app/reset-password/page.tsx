@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Lock, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { validatePassword } from "@/lib/utils/password-validation";
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -106,40 +107,6 @@ function ResetPasswordContent() {
     }
   }
 
-  // Validação robusta de senha
-  function validatePassword(password: string): { valid: boolean; errors: string[] } {
-    const errors: string[] = [];
-
-    if (password.length < 8) {
-      errors.push("A senha deve ter pelo menos 8 caracteres");
-    }
-
-    if (password.length > 128) {
-      errors.push("A senha não pode ter mais de 128 caracteres");
-    }
-
-    if (!/[a-z]/.test(password)) {
-      errors.push("A senha deve conter pelo menos uma letra minúscula");
-    }
-
-    if (!/[A-Z]/.test(password)) {
-      errors.push("A senha deve conter pelo menos uma letra maiúscula");
-    }
-
-    if (!/[0-9]/.test(password)) {
-      errors.push("A senha deve conter pelo menos um número");
-    }
-
-    // Verificar caracteres especiais (opcional, mas recomendado)
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)) {
-      errors.push("A senha deve conter pelo menos um caractere especial");
-    }
-
-    return {
-      valid: errors.length === 0,
-      errors,
-    };
-  }
 
   async function handleResetPassword() {
     setError("");
@@ -289,7 +256,7 @@ function ResetPasswordContent() {
                   Requisitos da senha:
                 </p>
                 <ul className="text-xs text-blue-800 space-y-1 list-disc list-inside">
-                  <li>Mínimo de 8 caracteres</li>
+                  <li>Mínimo de 10 caracteres</li>
                   <li>Pelo menos uma letra minúscula</li>
                   <li>Pelo menos uma letra maiúscula</li>
                   <li>Pelo menos um número</li>
@@ -334,7 +301,7 @@ function ResetPasswordContent() {
 
               <Button
                 onClick={handleResetPassword}
-                disabled={resetting || !newPassword || !confirmPassword || newPassword.length < 8}
+                disabled={resetting || !newPassword || !confirmPassword || newPassword.length < 10}
                 className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white h-12 text-base font-medium"
               >
                 {resetting ? (
