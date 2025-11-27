@@ -92,14 +92,15 @@ export async function POST(request: NextRequest) {
         // Grupos/canais públicos têm uma foto padrão disponível
         const defaultImageUrl = `https://telegram.org/img/t_logo.png`;
         
-        // Extrair título mesmo se não tiver imagem
-        const ogTitleMatch = html.match(/<meta\s+property=["']og:title["']\s+content=["']([^"']+)["']/i);
-        const titleTagMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-        let extractedTitle = identifier;
-        if (ogTitleMatch && ogTitleMatch[1]) {
-          extractedTitle = ogTitleMatch[1].trim().replace(/\s*-\s*Telegram$/, '').trim();
-        } else if (titleTagMatch && titleTagMatch[1]) {
-          extractedTitle = titleTagMatch[1].trim().replace(/\s*-\s*Telegram$/, '').trim();
+        // Extrair título mesmo se não tiver imagem (reutilizar variáveis já declaradas)
+        // ogTitleMatch e titleTagMatch já foram declaradas acima, apenas reutilizar extractedTitle
+        if (!extractedTitle || extractedTitle === identifier) {
+          // Se o título ainda não foi extraído, tentar novamente
+          if (ogTitleMatch && ogTitleMatch[1]) {
+            extractedTitle = ogTitleMatch[1].trim().replace(/\s*-\s*Telegram$/, '').trim();
+          } else if (titleTagMatch && titleTagMatch[1]) {
+            extractedTitle = titleTagMatch[1].trim().replace(/\s*-\s*Telegram$/, '').trim();
+          }
         }
         
         return NextResponse.json({
