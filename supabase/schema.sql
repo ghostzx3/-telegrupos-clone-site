@@ -146,7 +146,11 @@ CREATE POLICY "Users can manage own favorites" ON public.favorites
 
 -- Function to automatically create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = ''
+AS $$
 BEGIN
   INSERT INTO public.profiles (id, email, full_name, avatar_url)
   VALUES (
@@ -157,7 +161,7 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$;
 
 -- Trigger to create profile on user signup
 CREATE TRIGGER on_auth_user_created
@@ -166,12 +170,15 @@ CREATE TRIGGER on_auth_user_created
 
 -- Function to update updated_at timestamp
 CREATE OR REPLACE FUNCTION public.handle_updated_at()
-RETURNS TRIGGER AS $$
+RETURNS TRIGGER
+LANGUAGE plpgsql
+SET search_path = ''
+AS $$
 BEGIN
   NEW.updated_at = NOW();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$;
 
 -- Triggers for updated_at
 CREATE TRIGGER set_updated_at

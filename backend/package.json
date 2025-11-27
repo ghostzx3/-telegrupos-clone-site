@@ -1,0 +1,39 @@
+{
+  "name": "telegram-groups-backend",
+  "version": "1.0.0",
+  "description": "Backend para buscar e salvar informações de grupos do Telegram",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "api",
+    "express",
+    "prisma"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "prisma": "^5.7.1",
+    "@prisma/client": "^5.7.1",
+    "axios": "^1.6.2",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
+
+
+
+
+

@@ -378,3 +378,4 @@ AND expires_at > NOW();
 
 **Sistema completo e pronto para uso!** 🎉
 
+ aid

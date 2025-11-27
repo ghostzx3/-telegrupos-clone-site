@@ -229,3 +229,9 @@ Após deploy, atualize as URLs de redirecionamento no Supabase para a URL de pro
 
 **Pronto!** Seu sistema de recuperação de senha está configurado e funcionando! 🎉
 
+
+
+
+
+
+

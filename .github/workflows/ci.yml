@@ -35,12 +35,20 @@ jobs:
           # Verifica se a cobertura atinge os 70% mínimos
           # O Jest já falha se não atingir, mas podemos adicionar verificações adicionais aqui
 
+      # Nota: Os avisos do linter sobre "Context access might be invalid" são esperados
+      # quando se trabalha com secrets. Eles aparecem porque o linter não pode verificar
+      # se as secrets estão definidas no repositório. O workflow funcionará corretamente
+      # se as secrets estiverem configuradas nas configurações do repositório do GitHub.
       - name: Build production
         run: npm run build
         env:
+          # github-actions-linter: ignore - Context access is valid, secrets are defined in repository settings
           NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          # github-actions-linter: ignore
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key' }}
+          # github-actions-linter: ignore
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key' }}
+          # github-actions-linter: ignore
           NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL || 'http://localhost:3000' }}
 
       - name: Upload coverage reports

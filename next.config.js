@@ -9,7 +9,21 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['ext.same-assets.com', 'telegram.org'],
+    domains: ['ext.same-assets.com', 'telegram.org', 't.me', 'cdn4.telegram-cdn.org', 'cdn5.telegram-cdn.org'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**.telegram-cdn.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.telegram.org',
+      },
+      {
+        protocol: 'https',
+        hostname: 't.me',
+      },
+    ],
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
