@@ -151,7 +151,7 @@ export default function Home() {
         )}
 
         <main className="flex-1 p-3 sm:p-4 md:p-6 w-full lg:w-auto">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto w-full">
             {/* Title and Sort */}
             <div className="flex items-center justify-between gap-2 sm:gap-4 mb-4 sm:mb-6">
               <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -195,7 +195,7 @@ export default function Home() {
             ) : (
               <>
                 {/* Groups Grid - 2 colunas no mobile, 3-4 no desktop */}
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8 w-full" style={{ display: 'grid' }}>
                   {groups.map((group) => (
                     <GroupCard
                       key={group.id}

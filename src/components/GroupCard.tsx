@@ -38,11 +38,11 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
   };
 
   return (
-    <Card className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden h-full flex flex-col">
-      <CardContent className="p-0 flex flex-col h-full">
-        <div className="relative flex flex-col h-full">
+    <Card className="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden h-full flex flex-col w-full">
+      <CardContent className="p-0 flex flex-col h-full w-full">
+        <div className="relative flex flex-col h-full w-full">
           {/* Image - Proporção quadrada/retangular */}
-          <div className="relative w-full aspect-square bg-gray-200 flex-shrink-0 rounded-t-lg overflow-hidden">
+          <div className="relative w-full bg-gray-200 flex-shrink-0 rounded-t-lg overflow-hidden" style={{ aspectRatio: '1 / 1', minHeight: '120px' }}>
             {image ? (
               <Image
                 src={image}
@@ -51,6 +51,15 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
                 className="object-cover"
                 loading="lazy"
                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                unoptimized={image.startsWith('data:') || image.includes('supabase.co')}
+                onError={(e) => {
+                  // Fallback se a imagem falhar ao carregar
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  if (target.parentElement) {
+                    target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center"><span class="text-gray-400 text-2xl">📱</span></div>';
+                  }
+                }}
               />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
@@ -59,16 +68,16 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
             )}
             {/* Premium Badge */}
             {isPremium && (
-              <Badge className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-green-600 hover:bg-green-700 text-white text-[10px] sm:text-sm px-1.5 sm:px-2 py-0.5 sm:py-1 rounded">
+              <Badge className="absolute top-1.5 left-1.5 sm:top-2 sm:left-2 bg-green-600 hover:bg-green-700 text-white text-[10px] sm:text-sm px-1.5 sm:px-2 py-0.5 sm:py-1 rounded z-10">
                 Plus
               </Badge>
             )}
           </div>
 
           {/* Content */}
-          <div className="p-2.5 sm:p-4 flex flex-col flex-1">
+          <div className="p-2.5 sm:p-4 flex flex-col flex-1 w-full">
             {/* Título do Grupo */}
-            <h3 className="font-semibold text-gray-900 text-xs sm:text-base mb-1.5 sm:mb-2 line-clamp-2 min-h-[2.5rem] sm:min-h-[3rem] leading-tight">
+            <h3 className="font-semibold text-gray-900 text-xs sm:text-base mb-1.5 sm:mb-2 line-clamp-2 leading-tight">
               {title}
             </h3>
             
@@ -78,7 +87,7 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
             </p>
 
             {/* Enter Button */}
-            <Link href={link} className="mt-auto">
+            <Link href={link} className="mt-auto w-full">
               <Button className="w-full bg-[#038ede] hover:bg-[#0277c7] active:bg-[#0265a8] text-white text-[11px] sm:text-base font-semibold h-8 sm:h-10 min-h-[32px] sm:min-h-[40px] rounded-md shadow-sm">
                 ENTRAR
               </Button>

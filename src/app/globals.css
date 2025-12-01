@@ -91,6 +91,17 @@
     -webkit-tap-highlight-color: rgba(3, 142, 222, 0.2);
     touch-action: manipulation;
   }
+  
+  /* Garantir que grids funcionem corretamente em mobile */
+  .grid {
+    display: grid !important;
+  }
+  
+  /* Garantir que cards não quebrem o layout */
+  .grid > * {
+    min-width: 0;
+    width: 100%;
+  }
 }
 
 /* Custom scrollbar */
