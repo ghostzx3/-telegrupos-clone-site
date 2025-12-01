@@ -23,7 +23,7 @@ export function RecommendedGroups({ groups }: RecommendedGroupsProps) {
         Confira grupos e canais relacionados para participar!
       </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6">
         {groups.map((group) => (
           <GroupCard
             key={group.id}
