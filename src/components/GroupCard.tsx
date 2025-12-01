@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 interface GroupCardProps {
   title: string;
@@ -15,6 +16,12 @@ interface GroupCardProps {
 }
 
 export function GroupCard({ title, category, image, isPremium, link }: GroupCardProps) {
+  const [imageError, setImageError] = useState(false);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+
+  // Validar e processar URL da imagem
+  const validImage = image && image.trim() && image !== 'null' && image !== 'undefined' && !imageError;
+  
   const getCategoryDisplay = (cat: string) => {
     const categoryMap: Record<string, string> = {
       "apostas": "Apostas",
@@ -43,24 +50,25 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
         <div className="relative flex flex-col h-full w-full">
           {/* Image - Proporção quadrada/retangular */}
           <div className="relative w-full bg-gray-200 flex-shrink-0 rounded-t-lg overflow-hidden" style={{ aspectRatio: '1 / 1', minHeight: '120px' }}>
-            {image ? (
-              <Image
-                src={image}
-                alt={title}
-                fill
-                className="object-cover"
-                loading="lazy"
-                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                unoptimized={image.startsWith('data:') || image.includes('supabase.co')}
-                onError={(e) => {
-                  // Fallback se a imagem falhar ao carregar
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  if (target.parentElement) {
-                    target.parentElement.innerHTML = '<div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center"><span class="text-gray-400 text-2xl">📱</span></div>';
-                  }
-                }}
-              />
+            {validImage && !imageError ? (
+              <>
+                <Image
+                  src={image}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                  loading="lazy"
+                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  unoptimized={image.startsWith('data:') || image.includes('supabase.co') || image.includes('supabase.in') || image.includes('telegram-cdn.org') || image.includes('telegram.org') || image.includes('api.telegram.org')}
+                  onError={() => {
+                    setImageError(true);
+                  }}
+                  onLoad={() => {
+                    setImageError(false);
+                  }}
+                  priority={false}
+                />
+              </>
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                 <span className="text-gray-400 text-2xl">📱</span>
