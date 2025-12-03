@@ -3,9 +3,8 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface GroupCardProps {
   title: string;
@@ -17,6 +16,7 @@ interface GroupCardProps {
 
 export function GroupCard({ title, category, image, isPremium, link }: GroupCardProps) {
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Validar e processar URL da imagem
   // Remove espaços, verifica se não é null/undefined, e se não houve erro anterior
@@ -27,6 +27,19 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
     image !== 'null' && 
     image !== 'undefined' && 
     !imageError;
+
+  // Debug: log da imagem recebida
+  useEffect(() => {
+    if (image) {
+      console.log('[GroupCard] Imagem recebida:', {
+        title,
+        image,
+        imageType: typeof image,
+        imageLength: image.length,
+        isValid: validImage
+      });
+    }
+  }, [image, title, validImage]);
   
   const getCategoryDisplay = (cat: string) => {
     const categoryMap: Record<string, string> = {
@@ -57,24 +70,38 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
           {/* Image - Proporção quadrada/retangular */}
           <div className="relative w-full bg-gray-200 flex-shrink-0 rounded-t-lg overflow-hidden" style={{ aspectRatio: '1 / 1', minHeight: '120px' }}>
             {validImage && !imageError ? (
-              <Image
-                src={image}
-                alt={title}
-                fill
-                className="object-cover"
-                loading="lazy"
-                sizes="(max-width: 640px) 200px, (max-width: 1024px) 250px, (max-width: 1280px) 300px, 350px"
-                quality={75}
-                unoptimized={true}
-                onError={(e) => {
-                  console.warn('Erro ao carregar imagem:', image, e);
-                  setImageError(true);
-                }}
-                onLoad={() => {
-                  setImageError(false);
-                }}
-                priority={false}
-              />
+              <>
+                <img
+                  src={image}
+                  alt={title}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+                    imageLoaded ? 'opacity-100' : 'opacity-0'
+                  }`}
+                  loading="lazy"
+                  onError={(e) => {
+                    console.error('[GroupCard] Erro ao carregar imagem:', {
+                      title,
+                      image,
+                      error: e
+                    });
+                    setImageError(true);
+                    setImageLoaded(false);
+                  }}
+                  onLoad={() => {
+                    console.log('[GroupCard] Imagem carregada com sucesso:', {
+                      title,
+                      image
+                    });
+                    setImageLoaded(true);
+                    setImageError(false);
+                  }}
+                />
+                {!imageLoaded && !imageError && (
+                  <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                    <span className="text-gray-400 text-2xl">📱</span>
+                  </div>
+                )}
+              </>
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                 <span className="text-gray-400 text-2xl">📱</span>
