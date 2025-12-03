@@ -20,13 +20,13 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
 
   // Validar e processar URL da imagem
   // Remove espaços, verifica se não é null/undefined, e se não houve erro anterior
+  // Aceita qualquer URL válida (http, https, data URIs, ou caminhos relativos)
   const validImage = image && 
     typeof image === 'string' && 
     image.trim() !== '' && 
     image !== 'null' && 
     image !== 'undefined' && 
-    !imageError &&
-    (image.startsWith('http') || image.startsWith('data:') || image.startsWith('/'));
+    !imageError;
   
   const getCategoryDisplay = (cat: string) => {
     const categoryMap: Record<string, string> = {
@@ -65,9 +65,9 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
                 loading="lazy"
                 sizes="(max-width: 640px) 200px, (max-width: 1024px) 250px, (max-width: 1280px) 300px, 350px"
                 quality={75}
-                unoptimized={image.startsWith('data:') || image.includes('telegram-cdn.org') || image.includes('api.telegram.org')}
-                onError={() => {
-                  console.warn('Erro ao carregar imagem:', image);
+                unoptimized={true}
+                onError={(e) => {
+                  console.warn('Erro ao carregar imagem:', image, e);
                   setImageError(true);
                 }}
                 onLoad={() => {
