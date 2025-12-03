@@ -208,16 +208,26 @@ export default function Home() {
               <>
                 {/* Groups Grid - 2 colunas no mobile, 3-4 no desktop */}
                 <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8 w-full" style={{ display: 'grid' }}>
-                  {groups.map((group) => (
-                    <GroupCard
-                      key={group.id}
-                      title={group.title}
-                      category={group.categories?.slug || ''}
-                      image={group.image_url || ''}
-                      isPremium={group.is_premium}
-                      link={group.slug ? `/grupo/${group.slug}` : (group.telegram_link || '#')}
-                    />
-                  ))}
+                  {groups.map((group) => {
+                    // Log para debug
+                    console.log('[HomePage] Renderizando grupo:', {
+                      id: group.id,
+                      title: group.title,
+                      image_url: group.image_url,
+                      hasImage: !!group.image_url
+                    });
+                    
+                    return (
+                      <GroupCard
+                        key={group.id}
+                        title={group.title}
+                        category={group.categories?.slug || ''}
+                        image={group.image_url || ''}
+                        isPremium={group.is_premium}
+                        link={group.slug ? `/grupo/${group.slug}` : (group.telegram_link || '#')}
+                      />
+                    );
+                  })}
                 </div>
 
                 {/* No results message */}

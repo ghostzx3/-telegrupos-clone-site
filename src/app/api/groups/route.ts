@@ -57,6 +57,19 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 })
   }
 
+  // Log para debug - verificar se as imagens estão sendo retornadas
+  if (data && data.length > 0) {
+    console.log('[API Groups] Grupos retornados:', data.length);
+    data.forEach((group: any) => {
+      console.log('[API Groups] Grupo:', {
+        id: group.id,
+        title: group.title,
+        image_url: group.image_url,
+        hasImage: !!group.image_url
+      });
+    });
+  }
+
   return NextResponse.json({
     groups: data,
     total: count,
