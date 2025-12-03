@@ -16,9 +16,20 @@ export async function GET(request: Request) {
     .select('*, categories(*)', { count: 'exact' })
     .not('approved_at', 'is', null)
 
-  // Filter by category
+  // Filter by category - IMPORTANT: Only show groups from selected category
+  // Sem categoria selecionada, não retorna grupos (a página sempre terá uma categoria padrão)
   if (category) {
     query = query.eq('category_id', category)
+  } else {
+    // Se nenhuma categoria estiver selecionada, retornar vazio
+    // A página inicial sempre terá a categoria "adulto" selecionada por padrão
+    return NextResponse.json({
+      groups: [],
+      total: 0,
+      page,
+      limit,
+      totalPages: 0,
+    })
   }
 
   // Search by title

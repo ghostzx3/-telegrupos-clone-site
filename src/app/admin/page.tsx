@@ -6,8 +6,10 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 import Image from "next/image";
+import { Loader2, Edit2, Save, X, Upload } from "lucide-react";
 
 type Group = {
   id: string;
@@ -26,6 +28,11 @@ export default function AdminDashboard() {
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [editingGroup, setEditingGroup] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editImageUrl, setEditImageUrl] = useState("");
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     checkAdmin();
@@ -89,6 +96,103 @@ export default function AdminDashboard() {
     const supabase = createClient();
     await supabase.from('groups').delete().eq('id', id);
     fetchGroups();
+  }
+
+  function startEditing(group: Group) {
+    setEditingGroup(group.id);
+    setEditTitle(group.title);
+    setEditImageUrl(group.image_url || "");
+  }
+
+  function cancelEditing() {
+    setEditingGroup(null);
+    setEditTitle("");
+    setEditImageUrl("");
+  }
+
+  async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>, groupId: string) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validar tipo
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      alert('Tipo de arquivo não permitido. Use JPG, PNG, GIF ou WEBP.');
+      return;
+    }
+
+    // Validar tamanho (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Arquivo muito grande. Tamanho máximo: 5MB.');
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/admin/upload-image', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao fazer upload');
+      }
+
+      setEditImageUrl(data.url);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao fazer upload';
+      alert(errorMessage);
+    } finally {
+      setUploadingImage(false);
+      // Limpar input
+      e.target.value = '';
+    }
+  }
+
+  async function saveGroupChanges(groupId: string) {
+    if (!editTitle.trim()) {
+      alert('O nome do grupo é obrigatório.');
+      return;
+    }
+
+    setSaving(true);
+
+    try {
+      const response = await fetch(`/api/admin/groups/${groupId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title: editTitle.trim(),
+          image_url: editImageUrl || null,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao salvar alterações');
+      }
+
+      // Atualizar lista local
+      setGroups(groups.map(g => 
+        g.id === groupId 
+          ? { ...g, title: editTitle.trim(), image_url: editImageUrl || null }
+          : g
+      ));
+
+      cancelEditing();
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Erro ao salvar alterações';
+      alert(errorMessage);
+    } finally {
+      setSaving(false);
+    }
   }
 
   if (!isAdmin) {
@@ -168,19 +272,112 @@ export default function AdminDashboard() {
                     {/* Content */}
                     <div className="flex-1">
                       <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <h3 className="text-xl font-bold text-gray-900">{group.title}</h3>
-                          <p className="text-sm text-gray-600">
-                            Categoria: {group.categories?.name || 'N/A'}
-                          </p>
-                          {group.profiles && (
-                            <p className="text-sm text-gray-600">
-                              Enviado por: {group.profiles.full_name || group.profiles.email}
-                            </p>
+                        <div className="flex-1">
+                          {editingGroup === group.id ? (
+                            <div className="space-y-3">
+                              <div>
+                                <label className="text-sm font-medium text-gray-700 block mb-1">
+                                  Nome do Grupo *
+                                </label>
+                                <Input
+                                  type="text"
+                                  value={editTitle}
+                                  onChange={(e) => setEditTitle(e.target.value)}
+                                  className="w-full"
+                                  disabled={saving}
+                                />
+                              </div>
+                              <div>
+                                <label className="text-sm font-medium text-gray-700 block mb-1">
+                                  Foto do Grupo
+                                </label>
+                                <div className="space-y-2">
+                                  <input
+                                    type="file"
+                                    accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                                    onChange={(e) => handleFileSelect(e, group.id)}
+                                    disabled={uploadingImage || saving}
+                                    className="hidden"
+                                    id={`file-input-${group.id}`}
+                                  />
+                                  <div className="flex gap-2 items-center">
+                                    <Button
+                                      type="button"
+                                      onClick={() => document.getElementById(`file-input-${group.id}`)?.click()}
+                                      disabled={uploadingImage || saving}
+                                      variant="outline"
+                                      size="sm"
+                                    >
+                                      {uploadingImage ? (
+                                        <>
+                                          <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                          Enviando...
+                                        </>
+                                      ) : (
+                                        <>
+                                          <Upload className="w-4 h-4 mr-2" />
+                                          Selecionar Imagem
+                                        </>
+                                      )}
+                                    </Button>
+                                    {editImageUrl && (
+                                      <div className="relative w-20 h-20 rounded border border-gray-200 overflow-hidden bg-gray-100">
+                                        <Image
+                                          src={editImageUrl}
+                                          alt="Preview"
+                                          fill
+                                          className="object-cover"
+                                        />
+                                      </div>
+                                    )}
+                                  </div>
+                                  <Input
+                                    type="url"
+                                    value={editImageUrl}
+                                    onChange={(e) => setEditImageUrl(e.target.value)}
+                                    placeholder="Ou cole uma URL de imagem"
+                                    className="w-full text-sm"
+                                    disabled={saving}
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button
+                                  onClick={() => saveGroupChanges(group.id)}
+                                  disabled={saving || !editTitle.trim()}
+                                  size="sm"
+                                  className="bg-green-600 hover:bg-green-700"
+                                >
+                                  <Save className="w-4 h-4 mr-2" />
+                                  {saving ? 'Salvando...' : 'Salvar'}
+                                </Button>
+                                <Button
+                                  onClick={cancelEditing}
+                                  disabled={saving}
+                                  variant="outline"
+                                  size="sm"
+                                >
+                                  <X className="w-4 h-4 mr-2" />
+                                  Cancelar
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <h3 className="text-xl font-bold text-gray-900">{group.title}</h3>
+                              <p className="text-sm text-gray-600">
+                                Categoria: {group.categories?.name || 'N/A'}
+                              </p>
+                              {group.profiles && (
+                                <p className="text-sm text-gray-600">
+                                  Enviado por: {group.profiles.full_name || group.profiles.email}
+                                </p>
+                              )}
+                              <p className="text-xs text-gray-500">
+                                {format(new Date(group.created_at), 'dd/MM/yyyy HH:mm')}
+                              </p>
+                            </>
                           )}
-                          <p className="text-xs text-gray-500">
-                            {format(new Date(group.created_at), 'dd/MM/yyyy HH:mm')}
-                          </p>
                         </div>
 
                         {/* Status Badge */}
@@ -212,31 +409,45 @@ export default function AdminDashboard() {
                       </a>
 
                       {/* Actions */}
-                      <div className="flex gap-2 mt-4">
-                        {group.status === 'pending' && (
-                          <>
-                            <Button
-                              onClick={() => approveGroup(group.id)}
-                              className="bg-green-600 hover:bg-green-700"
-                            >
-                              Aprovar
-                            </Button>
-                            <Button
-                              onClick={() => rejectGroup(group.id)}
-                              className="bg-red-600 hover:bg-red-700"
-                            >
-                              Rejeitar
-                            </Button>
-                          </>
-                        )}
-                        <Button
-                          onClick={() => deleteGroup(group.id)}
-                          variant="outline"
-                          className="border-red-600 text-red-600 hover:bg-red-50"
-                        >
-                          Deletar
-                        </Button>
-                      </div>
+                      {editingGroup !== group.id && (
+                        <div className="flex gap-2 mt-4">
+                          <Button
+                            onClick={() => startEditing(group)}
+                            variant="outline"
+                            size="sm"
+                            className="border-blue-600 text-blue-600 hover:bg-blue-50"
+                          >
+                            <Edit2 className="w-4 h-4 mr-2" />
+                            Editar
+                          </Button>
+                          {group.status === 'pending' && (
+                            <>
+                              <Button
+                                onClick={() => approveGroup(group.id)}
+                                className="bg-green-600 hover:bg-green-700"
+                                size="sm"
+                              >
+                                Aprovar
+                              </Button>
+                              <Button
+                                onClick={() => rejectGroup(group.id)}
+                                className="bg-red-600 hover:bg-red-700"
+                                size="sm"
+                              >
+                                Rejeitar
+                              </Button>
+                            </>
+                          )}
+                          <Button
+                            onClick={() => deleteGroup(group.id)}
+                            variant="outline"
+                            size="sm"
+                            className="border-red-600 text-red-600 hover:bg-red-50"
+                          >
+                            Deletar
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </CardContent>

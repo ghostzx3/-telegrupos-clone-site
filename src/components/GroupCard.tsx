@@ -17,10 +17,16 @@ interface GroupCardProps {
 
 export function GroupCard({ title, category, image, isPremium, link }: GroupCardProps) {
   const [imageError, setImageError] = useState(false);
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
 
   // Validar e processar URL da imagem
-  const validImage = image && image.trim() && image !== 'null' && image !== 'undefined' && !imageError;
+  // Remove espaços, verifica se não é null/undefined, e se não houve erro anterior
+  const validImage = image && 
+    typeof image === 'string' && 
+    image.trim() !== '' && 
+    image !== 'null' && 
+    image !== 'undefined' && 
+    !imageError &&
+    (image.startsWith('http') || image.startsWith('data:') || image.startsWith('/'));
   
   const getCategoryDisplay = (cat: string) => {
     const categoryMap: Record<string, string> = {
@@ -58,15 +64,29 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
                   fill
                   className="object-cover"
                   loading="lazy"
-                  sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                  unoptimized={image.startsWith('data:') || image.includes('supabase.co') || image.includes('supabase.in') || image.includes('telegram-cdn.org') || image.includes('telegram.org') || image.includes('api.telegram.org')}
+                  sizes="(max-width: 640px) 200px, (max-width: 1024px) 250px, (max-width: 1280px) 300px, 350px"
+                  quality={75}
+                  unoptimized={image.startsWith('data:') || image.includes('telegram-cdn.org') || image.includes('api.telegram.org')}
                   onError={() => {
+                    console.warn('Erro ao carregar imagem:', image);
                     setImageError(true);
                   }}
                   onLoad={() => {
                     setImageError(false);
                   }}
                   priority={false}
+                />
+                {/* Fallback com img tag caso Next Image falhe */}
+                <img
+                  src={image}
+                  alt={title}
+                  className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    setImageError(true);
+                  }}
+                  loading="lazy"
                 />
               </>
             ) : (

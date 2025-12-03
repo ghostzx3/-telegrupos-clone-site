@@ -39,14 +39,26 @@ export default function Home() {
 
   // Modal promocional removido
 
-  // Fetch categories
+  // Fetch categories and set default to "adulto"
   useEffect(() => {
     fetchCategories();
   }, []);
 
-  // Fetch groups when filters change
+  // Set default category to "adulto" after categories are loaded
   useEffect(() => {
-    fetchGroups();
+    if (categories.length > 0 && !selectedCategory) {
+      const adultoCategory = categories.find(cat => cat.slug === 'adulto');
+      if (adultoCategory) {
+        setSelectedCategory(adultoCategory.id);
+      }
+    }
+  }, [categories, selectedCategory]);
+
+  // Fetch groups when filters change (only if category is selected)
+  useEffect(() => {
+    if (selectedCategory) {
+      fetchGroups();
+    }
   }, [searchQuery, selectedCategory, sortBy, currentPage]);
 
   async function fetchCategories() {

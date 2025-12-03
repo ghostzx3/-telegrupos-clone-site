@@ -198,3 +198,6 @@ TELEGRAM_BOT_TOKEN=...
 
 **Tudo mais já está implementado e configurado!** 🎉
 
+
+
+
