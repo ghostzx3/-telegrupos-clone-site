@@ -93,6 +93,37 @@ export async function POST(request: Request) {
 
   const body = await request.json()
 
+  // Se não tiver image_url ou title, buscar automaticamente do Telegram
+  if (body.telegram_link && (!body.image_url || !body.title)) {
+    try {
+      const { fetchTelegramGroupImage } = await import('@/lib/telegram/image-fetcher');
+      const botToken = process.env.TELEGRAM_BOT_TOKEN;
+      
+      console.log('[API Groups] Buscando informações do Telegram para:', body.telegram_link);
+      
+      const telegramData = await fetchTelegramGroupImage(body.telegram_link, botToken);
+      
+      if (telegramData.success) {
+        // Preencher imagem se não foi fornecida
+        if (!body.image_url && telegramData.imageUrl) {
+          body.image_url = telegramData.imageUrl;
+          console.log('[API Groups] Imagem preenchida automaticamente:', telegramData.imageUrl);
+        }
+        
+        // Preencher título se não foi fornecido
+        if (!body.title && telegramData.title) {
+          body.title = telegramData.title;
+          console.log('[API Groups] Título preenchido automaticamente:', telegramData.title);
+        }
+      } else {
+        console.warn('[API Groups] Não foi possível buscar dados do Telegram:', telegramData.error);
+      }
+    } catch (error: any) {
+      console.error('[API Groups] Erro ao buscar dados do Telegram:', error);
+      // Continuar mesmo se falhar - o usuário pode ter preenchido manualmente
+    }
+  }
+
   const { data, error } = await supabase
     .from('groups')
     .insert({

@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { format } from "date-fns";
 import Image from "next/image";
-import { Loader2, Edit2, Save, X, Upload } from "lucide-react";
+import { Loader2, Edit2, Save, X, Upload, RefreshCw } from "lucide-react";
 
 type Group = {
   id: string;
@@ -33,6 +33,8 @@ export default function AdminDashboard() {
   const [editImageUrl, setEditImageUrl] = useState("");
   const [uploadingImage, setUploadingImage] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [updatingImages, setUpdatingImages] = useState(false);
+  const [updateImagesStatus, setUpdateImagesStatus] = useState<string | null>(null);
 
   useEffect(() => {
     checkAdmin();
@@ -206,12 +208,44 @@ export default function AdminDashboard() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-3xl font-bold text-white">Painel Administrativo</h1>
-          <Link href="/admin/blog">
-            <Button className="bg-[#038ede] hover:bg-[#0277c7] text-white">
-              Gerenciar Blog
+          <div className="flex gap-2">
+            <Button
+              onClick={updateAllGroupImages}
+              disabled={updatingImages}
+              className="bg-green-600 hover:bg-green-700 text-white"
+            >
+              {updatingImages ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Atualizando...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Atualizar Imagens dos Grupos
+                </>
+              )}
             </Button>
-          </Link>
+            <Link href="/admin/blog">
+              <Button className="bg-[#038ede] hover:bg-[#0277c7] text-white">
+                Gerenciar Blog
+              </Button>
+            </Link>
+          </div>
         </div>
+
+        {/* Status da atualização */}
+        {updateImagesStatus && (
+          <div className={`mb-4 p-4 rounded-md ${
+            updateImagesStatus.includes('✅') 
+              ? 'bg-green-100 text-green-800 border border-green-300' 
+              : updateImagesStatus.includes('❌')
+              ? 'bg-red-100 text-red-800 border border-red-300'
+              : 'bg-blue-100 text-blue-800 border border-blue-300'
+          }`}>
+            <p className="font-medium">{updateImagesStatus}</p>
+          </div>
+        )}
 
         {/* Filter Tabs */}
         <div className="flex gap-2 mb-6">
