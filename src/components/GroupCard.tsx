@@ -57,38 +57,24 @@ export function GroupCard({ title, category, image, isPremium, link }: GroupCard
           {/* Image - Proporção quadrada/retangular */}
           <div className="relative w-full bg-gray-200 flex-shrink-0 rounded-t-lg overflow-hidden" style={{ aspectRatio: '1 / 1', minHeight: '120px' }}>
             {validImage && !imageError ? (
-              <>
-                <Image
-                  src={image}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                  loading="lazy"
-                  sizes="(max-width: 640px) 200px, (max-width: 1024px) 250px, (max-width: 1280px) 300px, 350px"
-                  quality={75}
-                  unoptimized={image.startsWith('data:') || image.includes('telegram-cdn.org') || image.includes('api.telegram.org')}
-                  onError={() => {
-                    console.warn('Erro ao carregar imagem:', image);
-                    setImageError(true);
-                  }}
-                  onLoad={() => {
-                    setImageError(false);
-                  }}
-                  priority={false}
-                />
-                {/* Fallback com img tag caso Next Image falhe */}
-                <img
-                  src={image}
-                  alt={title}
-                  className="absolute inset-0 w-full h-full object-cover opacity-0 pointer-events-none"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    setImageError(true);
-                  }}
-                  loading="lazy"
-                />
-              </>
+              <Image
+                src={image}
+                alt={title}
+                fill
+                className="object-cover"
+                loading="lazy"
+                sizes="(max-width: 640px) 200px, (max-width: 1024px) 250px, (max-width: 1280px) 300px, 350px"
+                quality={75}
+                unoptimized={image.startsWith('data:') || image.includes('telegram-cdn.org') || image.includes('api.telegram.org')}
+                onError={() => {
+                  console.warn('Erro ao carregar imagem:', image);
+                  setImageError(true);
+                }}
+                onLoad={() => {
+                  setImageError(false);
+                }}
+                priority={false}
+              />
             ) : (
               <div className="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                 <span className="text-gray-400 text-2xl">📱</span>
