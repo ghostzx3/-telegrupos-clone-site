@@ -9,7 +9,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ['ext.same-assets.com', 'telegram.org', 't.me', 'cdn4.telegram-cdn.org', 'cdn5.telegram-cdn.org'],
+    domains: ['ext.same-assets.com', 'telegram.org', 't.me', 'cdn4.telegram-cdn.org', 'cdn5.telegram-cdn.org', 'cdn1.telesco.pe'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -22,6 +22,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 't.me',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cdn1.telesco.pe',
       },
       {
         protocol: 'https',

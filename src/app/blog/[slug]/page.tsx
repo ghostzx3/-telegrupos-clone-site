@@ -113,6 +113,25 @@ export default function BlogPostPage() {
                   className="object-cover"
                   priority
                   sizes="(max-width: 768px) 100vw, 896px"
+                  onError={(e) => {
+                    // Fallback para placeholder quando a imagem falha
+                    const target = e.target as HTMLImageElement;
+                    if (!target.src.includes('data:image/svg+xml')) {
+                      const defaultSvg = `data:image/svg+xml;base64,${btoa(`
+                        <svg xmlns="http://www.w3.org/2000/svg" width="800" height="400" viewBox="0 0 800 400">
+                          <defs>
+                            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style="stop-color:#038ede;stop-opacity:1" />
+                              <stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" />
+                            </linearGradient>
+                          </defs>
+                          <rect width="800" height="400" fill="url(#grad)"/>
+                          <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="96" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${post.title.charAt(0).toUpperCase()}</text>
+                        </svg>
+                      `)}`;
+                      target.src = defaultSvg;
+                    }
+                  }}
                 />
               </div>
             )}

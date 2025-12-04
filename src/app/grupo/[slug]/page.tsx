@@ -133,6 +133,26 @@ export default function GroupPage() {
                     className="object-cover"
                     priority
                     sizes="160px"
+                    onError={(e) => {
+                      // Fallback para SVG padrão quando a imagem falha
+                      const target = e.target as HTMLImageElement;
+                      if (!target.src.includes('data:image/svg+xml')) {
+                        const defaultSvg = `data:image/svg+xml;base64,${btoa(`
+                          <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+                            <defs>
+                              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#038ede;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" />
+                              </linearGradient>
+                            </defs>
+                            <rect width="200" height="200" fill="url(#grad)"/>
+                            <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${group.title.charAt(0).toUpperCase()}</text>
+                          </svg>
+                        `)}`;
+                        target.src = defaultSvg;
+                        console.error('[GroupPage] Erro ao carregar imagem, usando fallback:', group.title);
+                      }
+                    }}
                   />
                 ) : (
                   <span className="text-white text-5xl font-bold">

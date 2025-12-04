@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Small Cake Font */
+/* Small Cake Font - DESABILITADO: Arquivos de fonte não encontrados
+ * Para habilitar novamente:
+ * 1. Baixe a fonte Small Cake de https://www.dafont.com/small-cake-2.font
+ * 2. Extraia o arquivo ZIP
+ * 3. Converta para .woff2 e .woff usando https://cloudconvert.com/ttf-to-woff2
+ * 4. Coloque os arquivos SmallCake.woff2, SmallCake.woff, SmallCake.ttf e SmallCake.otf em /public/fonts/
+ * 5. Descomente o código abaixo
+ */
+/*
 @font-face {
   font-family: 'Small Cake';
   src: url('/fonts/SmallCake.woff2') format('woff2'),
@@ -13,6 +21,7 @@
   font-style: normal;
   font-display: swap;
 }
+*/
 
 @layer base {
   :root {

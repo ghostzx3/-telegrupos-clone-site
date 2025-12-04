@@ -247,3 +247,5 @@ Para problemas ou dúvidas, verifique:
 
 **Sistema desenvolvido para garantir que todos os grupos tenham suas imagens oficiais do Telegram!** 🚀
 
+
+

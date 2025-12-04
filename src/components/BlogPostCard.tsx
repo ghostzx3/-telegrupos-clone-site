@@ -36,6 +36,25 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
                   className="object-cover"
                   loading="lazy"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  onError={(e) => {
+                    // Fallback para placeholder quando a imagem falha
+                    const target = e.target as HTMLImageElement;
+                    if (!target.src.includes('data:image/svg+xml')) {
+                      const defaultSvg = `data:image/svg+xml;base64,${btoa(`
+                        <svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">
+                          <defs>
+                            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                              <stop offset="0%" style="stop-color:#038ede;stop-opacity:1" />
+                              <stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" />
+                            </linearGradient>
+                          </defs>
+                          <rect width="400" height="200" fill="url(#grad)"/>
+                          <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${post.title.charAt(0).toUpperCase()}</text>
+                        </svg>
+                      `)}`;
+                      target.src = defaultSvg;
+                    }
+                  }}
                 />
               ) : (
                 <div className="flex items-center justify-center h-full bg-gradient-to-br from-[#038ede] to-[#0277c7]">

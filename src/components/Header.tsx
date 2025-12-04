@@ -49,7 +49,7 @@ export function Header({ onSearch, onLoginClick, onSubmitGroupClick, onMenuToggl
             </div>
             <h1 
               className="text-white font-bold text-xl sm:text-2xl md:text-3xl lg:text-4xl truncate cursor-pointer hover:opacity-90 transition-opacity" 
-              style={{ fontFamily: "'Small Cake', sans-serif", letterSpacing: '0.02em' }}
+              style={{ letterSpacing: '0.02em' }}
               onClick={() => {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 if (window.location.pathname !== '/') {

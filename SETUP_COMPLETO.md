@@ -238,3 +238,5 @@ Após deploy, atualize as URLs de redirecionamento no Supabase para a URL de pro
 
 
 
+
+

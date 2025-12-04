@@ -49,12 +49,61 @@ export function GroupImage({ imageUrl, title, className = "" }: GroupImageProps)
     setFinalUrl(`https://${trimmed}`);
   }, [imageUrl, title]);
 
+  // Função para lidar com erro de carregamento
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.target as HTMLImageElement;
+    // Se já tentou carregar a imagem padrão, não tentar novamente
+    if (target.src.includes('/default-group.svg') || target.src.includes('data:image/svg+xml')) {
+      return;
+    }
+    
+    console.error('[GroupImage] Erro ao carregar imagem:', {
+      title,
+      originalUrl: imageUrl,
+      finalUrl,
+    });
+    
+    // Tentar usar imagem padrão SVG como fallback
+    const defaultSvg = `data:image/svg+xml;base64,${btoa(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#038ede;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <rect width="200" height="200" fill="url(#grad)"/>
+        <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${title.charAt(0).toUpperCase()}</text>
+      </svg>
+    `)}`;
+    
+    target.src = defaultSvg;
+    setHasError(true);
+  };
+
   // Se não houver URL válida ou houver erro, mostrar placeholder
   if (!finalUrl || hasError) {
+    // Criar SVG padrão inline
+    const defaultSvg = `data:image/svg+xml;base64,${btoa(`
+      <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+        <defs>
+          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#038ede;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <rect width="200" height="200" fill="url(#grad)"/>
+        <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${title.charAt(0).toUpperCase()}</text>
+      </svg>
+    `)}`;
+    
     return (
-      <div className={`w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center ${className}`}>
-        <span className="text-gray-400 text-2xl">📱</span>
-      </div>
+      <img
+        src={defaultSvg}
+        alt={title}
+        className={`w-full h-full object-cover ${className}`}
+        loading="lazy"
+      />
     );
   }
 
@@ -65,16 +114,7 @@ export function GroupImage({ imageUrl, title, className = "" }: GroupImageProps)
       alt={title}
       className={`w-full h-full object-cover ${className}`}
       loading="lazy"
-      onError={(e) => {
-        console.error('[GroupImage] Erro ao carregar imagem:', {
-          title,
-          originalUrl: imageUrl,
-          finalUrl,
-          error: e
-        });
-        setHasError(true);
-        setFinalUrl(null);
-      }}
+      onError={handleImageError}
       onLoad={() => {
         console.log('[GroupImage] ✅ Imagem carregada com sucesso:', {
           title,
