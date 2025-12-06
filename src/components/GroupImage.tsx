@@ -53,7 +53,7 @@ export function GroupImage({ imageUrl, title, className = "" }: GroupImageProps)
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     const target = e.target as HTMLImageElement;
     // Se já tentou carregar a imagem padrão, não tentar novamente
-    if (target.src.includes('/default-group.svg') || target.src.includes('data:image/svg+xml')) {
+    if (target.src.includes('data:image/svg+xml')) {
       return;
     }
     
@@ -63,19 +63,10 @@ export function GroupImage({ imageUrl, title, className = "" }: GroupImageProps)
       finalUrl,
     });
     
-    // Tentar usar imagem padrão SVG como fallback
-    const defaultSvg = `data:image/svg+xml;base64,${btoa(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-        <defs>
-          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#038ede;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <rect width="200" height="200" fill="url(#grad)"/>
-        <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${title.charAt(0).toUpperCase()}</text>
-      </svg>
-    `)}`;
+    // Tentar usar imagem padrão SVG como fallback (sem base64)
+    const firstLetter = title.charAt(0).toUpperCase();
+    const svgContent = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#038ede;stop-opacity:1" /><stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" /></linearGradient></defs><rect width="200" height="200" fill="url(#grad)"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${firstLetter}</text></svg>`);
+    const defaultSvg = `data:image/svg+xml;charset=utf-8,${svgContent}`;
     
     target.src = defaultSvg;
     setHasError(true);
@@ -83,19 +74,10 @@ export function GroupImage({ imageUrl, title, className = "" }: GroupImageProps)
 
   // Se não houver URL válida ou houver erro, mostrar placeholder
   if (!finalUrl || hasError) {
-    // Criar SVG padrão inline
-    const defaultSvg = `data:image/svg+xml;base64,${btoa(`
-      <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-        <defs>
-          <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style="stop-color:#038ede;stop-opacity:1" />
-            <stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" />
-          </linearGradient>
-        </defs>
-        <rect width="200" height="200" fill="url(#grad)"/>
-        <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${title.charAt(0).toUpperCase()}</text>
-      </svg>
-    `)}`;
+    // Criar SVG padrão inline (sem base64)
+    const firstLetter = title.charAt(0).toUpperCase();
+    const svgContent = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#038ede;stop-opacity:1" /><stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" /></linearGradient></defs><rect width="200" height="200" fill="url(#grad)"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${firstLetter}</text></svg>`);
+    const defaultSvg = `data:image/svg+xml;charset=utf-8,${svgContent}`;
     
     return (
       <img

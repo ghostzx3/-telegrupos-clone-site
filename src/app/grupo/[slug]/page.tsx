@@ -13,20 +13,41 @@ import type { GroupWithCategory } from "@/lib/types/database";
 // Componente SafeImage para lidar com erros de imagem
 function SafeImage({ src, alt, title, className }: { src: string; alt: string; title: string; className?: string }) {
   const [hasError, setHasError] = useState(false);
+  const [imgSrc, setImgSrc] = useState(src || '');
 
   useEffect(() => {
-    setHasError(false);
+    if (src) {
+      setHasError(false);
+      setImgSrc(src);
+    }
   }, [src]);
 
-  const firstLetter = title.charAt(0).toUpperCase();
-  const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#038ede;stop-opacity:1" /><stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" /></linearGradient></defs><rect width="200" height="200" fill="url(#grad)"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${firstLetter}</text></svg>`;
-  const defaultSvg = typeof window !== 'undefined' ? `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgContent)))}` : '';
+  const handleError = () => {
+    if (!hasError && imgSrc) {
+      setHasError(true);
+      try {
+        // Criar SVG simples sem base64
+        const safeTitle = title || alt || '?';
+        const firstLetter = safeTitle.charAt(0).toUpperCase() || '?';
+        const svgContent = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#038ede;stop-opacity:1" /><stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" /></linearGradient></defs><rect width="200" height="200" fill="url(#grad)"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${firstLetter}</text></svg>`);
+        setImgSrc(`data:image/svg+xml;charset=utf-8,${svgContent}`);
+      } catch (error) {
+        console.error('[SafeImage] Erro ao criar fallback:', error);
+        setImgSrc('');
+      }
+    }
+  };
 
-  if (hasError) {
+  if (!imgSrc || hasError) {
+    const safeTitle = title || alt || '?';
+    const firstLetter = safeTitle.charAt(0).toUpperCase() || '?';
+    const svgContent = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#038ede;stop-opacity:1" /><stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" /></linearGradient></defs><rect width="200" height="200" fill="url(#grad)"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${firstLetter}</text></svg>`);
+    const defaultSvg = `data:image/svg+xml;charset=utf-8,${svgContent}`;
+    
     return (
       <img
         src={defaultSvg}
-        alt={alt}
+        alt={alt || 'Imagem'}
         className={`absolute inset-0 w-full h-full ${className || ''}`}
       />
     );
@@ -34,12 +55,10 @@ function SafeImage({ src, alt, title, className }: { src: string; alt: string; t
 
   return (
     <img
-      src={src}
-      alt={alt}
+      src={imgSrc}
+      alt={alt || 'Imagem'}
       className={`absolute inset-0 w-full h-full ${className || ''}`}
-      onError={() => {
-        setHasError(true);
-      }}
+      onError={handleError}
     />
   );
 }
