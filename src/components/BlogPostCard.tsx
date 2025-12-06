@@ -1,63 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Calendar, Eye } from "lucide-react";
 import type { BlogPostWithTags } from "@/lib/types/database";
 
-// Componente SafeImage para lidar com erros de imagem
+// Componente SafeImage simplificado para evitar erros
 function SafeImage({ src, alt, title, className }: { src: string; alt: string; title: string; className?: string }) {
-  const [hasError, setHasError] = useState(false);
-  const [imgSrc, setImgSrc] = useState(src || '');
-
-  useEffect(() => {
-    if (src) {
-      setHasError(false);
-      setImgSrc(src);
-    }
-  }, [src]);
-
-  const handleError = () => {
-    if (!hasError && imgSrc) {
-      setHasError(true);
-      try {
-        // Criar SVG simples sem base64
-        const safeTitle = title || alt || '?';
-        const firstLetter = safeTitle.charAt(0).toUpperCase() || '?';
-        const svgContent = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#038ede;stop-opacity:1" /><stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" /></linearGradient></defs><rect width="400" height="200" fill="url(#grad)"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${firstLetter}</text></svg>`);
-        setImgSrc(`data:image/svg+xml;charset=utf-8,${svgContent}`);
-      } catch (error) {
-        console.error('[SafeImage] Erro ao criar fallback:', error);
-        setImgSrc('');
-      }
-    }
-  };
-
-  if (!imgSrc || hasError) {
-    const safeTitle = title || alt || '?';
-    const firstLetter = safeTitle.charAt(0).toUpperCase() || '?';
-    const svgContent = encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#038ede;stop-opacity:1" /><stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" /></linearGradient></defs><rect width="400" height="200" fill="url(#grad)"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${firstLetter}</text></svg>`);
-    const defaultSvg = `data:image/svg+xml;charset=utf-8,${svgContent}`;
-    
+  const [imgError, setImgError] = useState(false);
+  
+  if (!src || imgError) {
+    const letter = (title || alt || '?').charAt(0).toUpperCase();
     return (
-      <img
-        src={defaultSvg}
-        alt={alt || 'Imagem'}
-        className={`absolute inset-0 w-full h-full ${className || ''}`}
-        loading="lazy"
-      />
+      <div className={`absolute inset-0 w-full h-full bg-gradient-to-br from-[#038ede] to-[#0277c7] flex items-center justify-center ${className || ''}`}>
+        <span className="text-white text-4xl font-bold">{letter}</span>
+      </div>
     );
   }
 
   return (
     <img
-      src={imgSrc}
+      src={src}
       alt={alt || 'Imagem'}
-      className={`absolute inset-0 w-full h-full ${className || ''}`}
+      className={`absolute inset-0 w-full h-full object-cover ${className || ''}`}
       loading="lazy"
-      onError={handleError}
+      onError={() => setImgError(true)}
     />
   );
 }
