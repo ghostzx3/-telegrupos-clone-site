@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 import { Header } from "@/components/Header";
