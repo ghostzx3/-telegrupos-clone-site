@@ -1,11 +1,46 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
 import Link from "next/link";
 import { Calendar, Eye } from "lucide-react";
 import type { BlogPostWithTags } from "@/lib/types/database";
+
+// Componente SafeImage para lidar com erros de imagem
+function SafeImage({ src, alt, title, className }: { src: string; alt: string; title: string; className?: string }) {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [src]);
+
+  const firstLetter = title.charAt(0).toUpperCase();
+  const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#038ede;stop-opacity:1" /><stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" /></linearGradient></defs><rect width="400" height="200" fill="url(#grad)"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${firstLetter}</text></svg>`;
+  const defaultSvg = typeof window !== 'undefined' ? `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgContent)))}` : '';
+
+  if (hasError) {
+    return (
+      <img
+        src={defaultSvg}
+        alt={alt}
+        className={`absolute inset-0 w-full h-full ${className || ''}`}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={`absolute inset-0 w-full h-full ${className || ''}`}
+      loading="lazy"
+      onError={() => {
+        setHasError(true);
+      }}
+    />
+  );
+}
 
 interface BlogPostCardProps {
   post: BlogPostWithTags;
@@ -29,32 +64,11 @@ export function BlogPostCard({ post }: BlogPostCardProps) {
             {/* Image */}
             <div className="relative w-full h-48 bg-gray-200">
               {post.image_url ? (
-                <Image
+                <SafeImage
                   src={post.image_url}
                   alt={post.title}
-                  fill
+                  title={post.title}
                   className="object-cover"
-                  loading="lazy"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  onError={(e) => {
-                    // Fallback para placeholder quando a imagem falha
-                    const target = e.target as HTMLImageElement;
-                    if (!target.src.includes('data:image/svg+xml')) {
-                      const defaultSvg = `data:image/svg+xml;base64,${btoa(`
-                        <svg xmlns="http://www.w3.org/2000/svg" width="400" height="200" viewBox="0 0 400 200">
-                          <defs>
-                            <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" style="stop-color:#038ede;stop-opacity:1" />
-                              <stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" />
-                            </linearGradient>
-                          </defs>
-                          <rect width="400" height="200" fill="url(#grad)"/>
-                          <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${post.title.charAt(0).toUpperCase()}</text>
-                        </svg>
-                      `)}`;
-                      target.src = defaultSvg;
-                    }
-                  }}
                 />
               ) : (
                 <div className="flex items-center justify-center h-full bg-gradient-to-br from-[#038ede] to-[#0277c7]">

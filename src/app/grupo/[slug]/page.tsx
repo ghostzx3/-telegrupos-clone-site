@@ -7,9 +7,42 @@ import { Header } from "@/components/Header";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, Eye, AlertTriangle, ExternalLink } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import type { GroupWithCategory } from "@/lib/types/database";
+
+// Componente SafeImage para lidar com erros de imagem
+function SafeImage({ src, alt, title, className }: { src: string; alt: string; title: string; className?: string }) {
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [src]);
+
+  const firstLetter = title.charAt(0).toUpperCase();
+  const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#038ede;stop-opacity:1" /><stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" /></linearGradient></defs><rect width="200" height="200" fill="url(#grad)"/><text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${firstLetter}</text></svg>`;
+  const defaultSvg = typeof window !== 'undefined' ? `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgContent)))}` : '';
+
+  if (hasError) {
+    return (
+      <img
+        src={defaultSvg}
+        alt={alt}
+        className={`absolute inset-0 w-full h-full ${className || ''}`}
+      />
+    );
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={`absolute inset-0 w-full h-full ${className || ''}`}
+      onError={() => {
+        setHasError(true);
+      }}
+    />
+  );
+}
 
 // Lazy load modals - só carregam quando necessário
 const LoginModal = dynamic(() => import("@/components/LoginModal").then(mod => ({ default: mod.LoginModal })), {
@@ -126,33 +159,11 @@ export default function GroupPage() {
             <div className="flex justify-center pt-4 sm:pt-6 md:pt-8 pb-3 sm:pb-4">
               <div className="relative w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full overflow-hidden bg-gradient-to-br from-[#038ede] to-[#0277c7] flex items-center justify-center">
                 {group.image_url ? (
-                  <Image
+                  <SafeImage
                     src={group.image_url}
                     alt={group.title}
-                    fill
+                    title={group.title}
                     className="object-cover"
-                    priority
-                    sizes="160px"
-                    onError={(e) => {
-                      // Fallback para SVG padrão quando a imagem falha
-                      const target = e.target as HTMLImageElement;
-                      if (!target.src.includes('data:image/svg+xml')) {
-                        const defaultSvg = `data:image/svg+xml;base64,${btoa(`
-                          <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-                            <defs>
-                              <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#038ede;stop-opacity:1" />
-                                <stop offset="100%" style="stop-color:#0277c7;stop-opacity:1" />
-                              </linearGradient>
-                            </defs>
-                            <rect width="200" height="200" fill="url(#grad)"/>
-                            <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="white" text-anchor="middle" dominant-baseline="middle">${group.title.charAt(0).toUpperCase()}</text>
-                          </svg>
-                        `)}`;
-                        target.src = defaultSvg;
-                        console.error('[GroupPage] Erro ao carregar imagem, usando fallback:', group.title);
-                      }
-                    }}
                   />
                 ) : (
                   <span className="text-white text-5xl font-bold">
